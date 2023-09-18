@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.API", "Hike.API\Hike.API.csproj", "{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Logic", "Hike.Logic\Hike.Logic.csproj", "{8A583CC6-E667-40DC-A515-77B1201F7308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Data", "Hike.Data\Hike.Data.csproj", "{708C6206-F933-40B4-A696-A5824CD3B718}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A583CC6-E667-40DC-A515-77B1201F7308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A583CC6-E667-40DC-A515-77B1201F7308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A583CC6-E667-40DC-A515-77B1201F7308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A583CC6-E667-40DC-A515-77B1201F7308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{708C6206-F933-40B4-A696-A5824CD3B718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{708C6206-F933-40B4-A696-A5824CD3B718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{708C6206-F933-40B4-A696-A5824CD3B718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{708C6206-F933-40B4-A696-A5824CD3B718}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
