@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddLogic(this IServiceCollection collection)
     {
-        collection.AddTransient<IPlanService, PlanService>();
+        collection.AddTransient<ITrailService, TrailService>();
         return collection;
     }
 }

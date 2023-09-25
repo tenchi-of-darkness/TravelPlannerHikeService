@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Hike.Data.DbContext;
-using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
 namespace Hike.Data.Entities;
@@ -21,11 +19,29 @@ public class TrailEntity
     public string LocationName { get; set; } = "";
     
     public long DistanceInMeters { get; set; }
-}
 
-public enum TrailDifficulty
-{
-    Beginner=0,
-    Intermediate=10,
-    Hard=20
+    public TrailModel ToTrailModel()
+    {
+        return new TrailModel
+        {
+            Id = Id,
+            LineString = LineString,
+            Rating = Rating,
+            Difficulty = Difficulty,
+            Title = Title,
+            LocationName = LocationName,
+            DistanceInMeters = DistanceInMeters
+        };
+    }
+
+    public TrailEntity(TrailModel model)
+    {
+        Id = model.Id;
+        LineString = model.LineString;
+        Rating = model.Rating;
+        Difficulty = model.Difficulty;
+        Title = model.Title;
+        LocationName = model.LocationName;
+        DistanceInMeters = model.DistanceInMeters;
+    }
 }

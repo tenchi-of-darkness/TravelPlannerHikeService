@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddData(this IServiceCollection collection)
     {
-        collection.AddTransient<IPlanRepository, PlanRepository>();
+        collection.AddTransient<ITrailRepository, TrailRepository>();
         return collection;
     }
 }
