@@ -6,5 +6,6 @@ public interface ITrailRepository
 {
     Task<TrailModel?> GetTrailById(Guid id);
 
-    Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue);
+    Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue, int page, int pageSize);
+    
 }
