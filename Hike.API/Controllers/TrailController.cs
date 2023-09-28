@@ -24,8 +24,21 @@ public class TrailController : ControllerBase
     }
 
     [HttpGet(Name = "SearchTrailByTitle")]
-    public async Task<ActionResult<IEnumerable<TrailModel>>> SearchTrailByTitle([FromQuery] string searchValue, int page, int pageSize)
+    public async Task<ActionResult<IEnumerable<TrailModel>>> SearchTrailByTitle([FromQuery] string searchValue,
+        int page, int pageSize)
     {
         return Ok(await _service.SearchTrailByTitle(searchValue, page, pageSize));
+    }
+
+    [HttpPost(Name = "AddTrail")]
+    public async Task<IActionResult> AddTrail([FromBody] TrailModel model)
+    {
+        bool success = await _service.AddTrail(model);
+        if (success)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
     }
 }

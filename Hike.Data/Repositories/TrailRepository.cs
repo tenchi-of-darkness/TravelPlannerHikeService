@@ -20,6 +20,12 @@ public class TrailRepository : ITrailRepository
         return trail?.ToTrailModel();
     }
 
+    public async Task<bool> AddTrail(TrailModel model)
+    {
+        _context.Trails.Add(new TrailEntity(model));
+        return await _context.SaveChangesAsync()==1;
+    }
+
     public async Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue, int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
@@ -27,4 +33,6 @@ public class TrailRepository : ITrailRepository
             .ToArrayAsync();
         return trails.Select(t => t.ToTrailModel());
     }
+    
+    
 }

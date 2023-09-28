@@ -8,4 +8,5 @@ public interface ITrailRepository
 
     Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue, int page, int pageSize);
     
+    Task<bool> AddTrail(TrailModel model);
 }

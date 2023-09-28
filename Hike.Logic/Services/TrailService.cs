@@ -21,6 +21,9 @@ public class TrailService : ITrailService
     {
         return await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
     }
-    
-    
+
+    public async Task<bool> AddTrail(TrailModel model)
+    {
+        return await _trailRepository.AddTrail(model);
+    }
 }
