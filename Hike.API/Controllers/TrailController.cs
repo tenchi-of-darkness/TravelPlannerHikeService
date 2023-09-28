@@ -5,7 +5,7 @@ using Hike.Logic.Services.Interfaces;
 namespace Hike.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]/[action]")]
 public class TrailController : ControllerBase
 {
     private readonly ILogger<TrailController> _logger;

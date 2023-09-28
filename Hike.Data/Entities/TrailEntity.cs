@@ -44,4 +44,9 @@ public class TrailEntity
         LocationName = model.LocationName;
         DistanceInMeters = model.DistanceInMeters;
     }
+
+    public TrailEntity()
+    {
+        
+    }
 }
