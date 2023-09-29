@@ -33,6 +33,4 @@ public class TrailRepository : ITrailRepository
             .ToArrayAsync();
         return trails.Select(t => t.ToTrailModel());
     }
-    
-    
 }

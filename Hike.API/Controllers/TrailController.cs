@@ -5,7 +5,7 @@ using Hike.Logic.Services.Interfaces;
 namespace Hike.API.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("api/trails")]
 public class TrailController : ControllerBase
 {
     private readonly ILogger<TrailController> _logger;
@@ -17,20 +17,20 @@ public class TrailController : ControllerBase
         _service = service;
     }
 
-    [HttpGet(Name = "GetTrailById")]
-    public async Task<ActionResult<TrailModel?>> GetTrailById([FromQuery] Guid id)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<TrailModel?>> GetTrailById([FromRoute] Guid id)
     {
         return Ok(await _service.GetTrailById(id));
     }
 
-    [HttpGet(Name = "SearchTrailByTitle")]
+    [HttpGet("search")]
     public async Task<ActionResult<IEnumerable<TrailModel>>> SearchTrailByTitle([FromQuery] string searchValue,
         int page, int pageSize)
     {
         return Ok(await _service.SearchTrailByTitle(searchValue, page, pageSize));
     }
 
-    [HttpPost(Name = "AddTrail")]
+    [HttpPost]
     public async Task<IActionResult> AddTrail([FromBody] TrailModel model)
     {
         bool success = await _service.AddTrail(model);
