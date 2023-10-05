@@ -15,6 +15,8 @@ public class TrailEntity
     public TrailDifficulty Difficulty { get; set; }
 
     public string Title { get; set; } = "";
+    
+    public string? Description { get; set; }
 
     public string LocationName { get; set; } = "";
     
@@ -29,6 +31,7 @@ public class TrailEntity
             Rating = Rating,
             Difficulty = Difficulty,
             Title = Title,
+            Description = Description,
             LocationName = LocationName,
             DistanceInMeters = DistanceInMeters
         };
@@ -41,6 +44,7 @@ public class TrailEntity
         Rating = model.Rating;
         Difficulty = model.Difficulty;
         Title = model.Title;
+        Description = model.Description;
         LocationName = model.LocationName;
         DistanceInMeters = model.DistanceInMeters;
     }

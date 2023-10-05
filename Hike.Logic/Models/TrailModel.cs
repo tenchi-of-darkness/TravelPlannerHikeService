@@ -14,6 +14,8 @@ public class TrailModel
 
     public string Title { get; set; } = "";
 
+    public string? Description { get; set; }
+
     public string LocationName { get; set; } = "";
     
     public long DistanceInMeters { get; set; }
