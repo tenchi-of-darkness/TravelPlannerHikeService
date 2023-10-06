@@ -1,3 +1,4 @@
+using Hike.API.Models.Requests.Trail;
 using Hike.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Hike.Logic.Services.Interfaces;
@@ -18,16 +19,21 @@ public class TrailController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<TrailModel?>> GetTrailById([FromRoute] Guid id)
+    public async Task<ActionResult<TrailModel>> GetTrailById([FromRoute] Guid id)
     {
-        return Ok(await _service.GetTrailById(id));
+        var trail = await _service.GetTrailById(id);
+        if (trail == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(trail);
     }
 
-    [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<TrailModel>>> SearchTrailByTitle([FromQuery] string searchValue,
-        int page, int pageSize)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<TrailModel>>> GetTrails([FromQuery]GetTrailsRequest request)
     {
-        return Ok(await _service.SearchTrailByTitle(searchValue, page, pageSize));
+        return Ok(await _service.GetTrails(request.SearchValue, request.Page, request.PageSize));
     }
 
     [HttpPost]

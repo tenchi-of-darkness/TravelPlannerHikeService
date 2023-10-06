@@ -17,7 +17,7 @@ public class TrailService : ITrailService
         return await _trailRepository.GetTrailById(id);
     }
 
-    public async Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue, int page, int pageSize)
+    public async Task<IEnumerable<TrailModel>> GetTrails(string? searchValue, int page, int pageSize)
     {
         return await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
     }

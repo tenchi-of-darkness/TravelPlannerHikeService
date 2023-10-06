@@ -23,14 +23,20 @@ public class TrailRepository : ITrailRepository
     public async Task<bool> AddTrail(TrailModel model)
     {
         _context.Trails.Add(new TrailEntity(model));
-        return await _context.SaveChangesAsync()==1;
+        return await _context.SaveChangesAsync() == 1;
     }
 
-    public async Task<IEnumerable<TrailModel>> SearchTrailByTitle(string searchValue, int page, int pageSize)
+    public async Task<IEnumerable<TrailModel>> SearchTrailByTitle(string? searchValue, int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
-        TrailEntity[] trails = await _context.Trails.Where(t => t.Title.Contains(searchValue)).Skip(skip).Take(pageSize)
-            .ToArrayAsync();
-        return trails.Select(t => t.ToTrailModel());
+        var query = _context.Trails.AsQueryable();
+
+        if (searchValue != null)
+        {
+            query = query.Where(t => t.Title.Contains(searchValue));
+        }
+        
+        return await query.Skip(skip)
+            .Take(pageSize).Select(t => t.ToTrailModel()).ToArrayAsync();
     }
 }

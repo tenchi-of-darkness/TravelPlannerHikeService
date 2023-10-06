@@ -29,4 +29,8 @@
       <ProjectReference Include="..\Hike.Logic\Hike.Logic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\Responses\" />
+    </ItemGroup>
+
 </Project>
