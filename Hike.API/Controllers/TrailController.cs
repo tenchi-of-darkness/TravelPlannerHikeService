@@ -1,5 +1,7 @@
-using Hike.API.Models.Requests.Trail;
 using Hike.Data.Entities;
+using Hike.Logic.Models;
+using Hike.Logic.Models.Requests.Trail;
+using Hike.Logic.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Hike.Logic.Services.Interfaces;
 
@@ -37,14 +39,19 @@ public class TrailController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddTrail([FromBody] TrailModel model)
+    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] TrailModel model)
     {
-        bool success = await _service.AddTrail(model);
-        if (success)
+        AddTrailResponse response = await _service.AddTrail(model);
+        if (response.FailureReason == null)
         {
             return Ok();
         }
 
-        return BadRequest();
+        if (response.FailureType == FailureType.User)
+        {
+            return BadRequest(response);
+        }
+        
+        return StatusCode(500, response);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Hike.Data.Entities;
+﻿using Hike.Logic.Models;
+using Hike.Logic.Models.Responses;
 using Hike.Logic.Repositories.Interfaces;
 using Hike.Logic.Services.Interfaces;
 
@@ -22,8 +23,18 @@ public class TrailService : ITrailService
         return await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
     }
 
-    public async Task<bool> AddTrail(TrailModel model)
+    public async Task<AddTrailResponse> AddTrail(TrailModel model)
     {
-        return await _trailRepository.AddTrail(model);
+        if (model.Description?.Length > 255)
+        {
+            return new AddTrailResponse(FailureType.User,"Description has too many characters. Only 255 characters allowed");
+        }
+
+        if (!await _trailRepository.AddTrail(model))
+        {
+            return new AddTrailResponse(FailureType.Server,"Database failure");
+        }
+
+        return new AddTrailResponse();
     }
 }

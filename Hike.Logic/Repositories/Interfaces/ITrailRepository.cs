@@ -1,4 +1,4 @@
-﻿using Hike.Data.Entities;
+﻿using Hike.Logic.Models;
 
 namespace Hike.Logic.Repositories.Interfaces;
 

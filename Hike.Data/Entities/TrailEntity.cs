@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Hike.Logic.Models;
 using NetTopologySuite.Geometries;
 
 namespace Hike.Data.Entities;
@@ -21,6 +22,8 @@ public class TrailEntity
     public string LocationName { get; set; } = "";
     
     public long DistanceInMeters { get; set; }
+    
+    public Guid OwnerUserId { get; set; }
 
     public TrailModel ToTrailModel()
     {

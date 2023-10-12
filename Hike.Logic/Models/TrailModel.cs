@@ -1,6 +1,6 @@
 ﻿using NetTopologySuite.Geometries;
 
-namespace Hike.Data.Entities;
+namespace Hike.Logic.Models;
 
 public class TrailModel
 {

@@ -1,5 +1,6 @@
 ﻿using Hike.Data.DbContext;
 using Hike.Data.Entities;
+using Hike.Logic.Models;
 using Hike.Logic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
