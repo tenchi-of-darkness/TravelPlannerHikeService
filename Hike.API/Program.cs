@@ -29,7 +29,7 @@ builder.Services.ConfigureSwaggerGen(options =>
 });
 
 //Dependency Injection of Hike.Logic + Hike.Data
-builder.Services.AddLogic().AddData();
+builder.Services.AddLogic().AddData(builder.Configuration);
 
 var app = builder.Build();
 
@@ -44,8 +44,6 @@ app.UseCors(options =>
 {
     options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 });
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
