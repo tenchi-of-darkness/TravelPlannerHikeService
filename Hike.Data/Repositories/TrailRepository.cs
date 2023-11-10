@@ -1,6 +1,5 @@
 ﻿using Hike.Data.DbContext;
-using Hike.Data.Entities;
-using Hike.Logic.Models;
+using Hike.Logic.Entities;
 using Hike.Logic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,19 +14,19 @@ public class TrailRepository : ITrailRepository
         _context = context;
     }
 
-    public async Task<TrailModel?> GetTrailById(Guid id)
+    public async Task<TrailEntity?> GetTrailById(Guid id)
     {
         TrailEntity? trail = await _context.Trails.FindAsync(id);
-        return trail?.ToTrailModel();
+        return trail;
     }
 
-    public async Task<bool> AddTrail(TrailModel model)
+    public async Task<bool> AddTrail(TrailEntity entity)
     {
-        _context.Trails.Add(new TrailEntity(model));
+        _context.Trails.Add(entity);
         return await _context.SaveChangesAsync() == 1;
     }
 
-    public async Task<IEnumerable<TrailModel>> SearchTrailByTitle(string? searchValue, int page, int pageSize)
+    public async Task<IEnumerable<TrailEntity>> SearchTrailByTitle(string? searchValue, int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
         var query = _context.Trails.AsQueryable();
@@ -38,6 +37,6 @@ public class TrailRepository : ITrailRepository
         }
         
         return await query.Skip(skip)
-            .Take(pageSize).Select(t => t.ToTrailModel()).ToArrayAsync();
+            .Take(pageSize).ToArrayAsync();
     }
 }

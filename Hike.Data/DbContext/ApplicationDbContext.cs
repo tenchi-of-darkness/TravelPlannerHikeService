@@ -1,4 +1,4 @@
-﻿using Hike.Data.Entities;
+﻿using Hike.Logic.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

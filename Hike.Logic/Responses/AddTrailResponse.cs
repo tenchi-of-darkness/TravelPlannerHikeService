@@ -1,4 +1,4 @@
-﻿namespace Hike.Logic.Models.Responses;
+﻿namespace Hike.API.Models.Responses;
 
 public record AddTrailResponse(FailureType? FailureType = null, string? FailureReason = null);
 

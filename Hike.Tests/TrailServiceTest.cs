@@ -1,4 +1,4 @@
-using Hike.Logic.Models;
+using Hike.Logic.Entities;
 using Hike.Logic.Repositories.Interfaces;
 using Hike.Logic.Services;
 using Hike.Logic.Services.Interfaces;
@@ -25,7 +25,7 @@ public class TrailServiceTest
         string? searchValue = "";
         int page = 1;
         int pageSize = 5;
-        var trailsList = new List<TrailModel>
+        var trailsList = new List<TrailEntity>
         {
             new()
             {
@@ -43,7 +43,7 @@ public class TrailServiceTest
         _trailRepositoryMock.Setup(x => x.SearchTrailByTitle(searchValue, page, pageSize)).ReturnsAsync(trailsList);
 
         //Act
-        IEnumerable<TrailModel> trails = await _instance.GetTrails(searchValue, page, pageSize);
+        IEnumerable<TrailEntity> trails = await _instance.GetTrails(searchValue, page, pageSize);
 
         //Assert
         Assert.True(trails.Intersect(trailsList).Count()==trails.Count());

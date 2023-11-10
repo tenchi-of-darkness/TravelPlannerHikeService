@@ -1,12 +1,12 @@
-﻿using Hike.Logic.Models;
+﻿using Hike.Logic.Entities;
 
 namespace Hike.Logic.Repositories.Interfaces;
 
 public interface ITrailRepository
 {
-    Task<TrailModel?> GetTrailById(Guid id);
+    Task<TrailEntity?> GetTrailById(Guid id);
 
-    Task<IEnumerable<TrailModel>> SearchTrailByTitle(string? searchValue, int page, int pageSize);
+    Task<IEnumerable<TrailEntity>> SearchTrailByTitle(string? searchValue, int page, int pageSize);
     
-    Task<bool> AddTrail(TrailModel model);
+    Task<bool> AddTrail(TrailEntity entity);
 }
