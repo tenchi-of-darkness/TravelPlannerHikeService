@@ -26,6 +26,11 @@ public class TrailRepository : ITrailRepository
         return await _context.SaveChangesAsync() == 1;
     }
 
+    public async Task<bool> DeleteTrail(Guid id)
+    {
+        return await _context.Trails.Where(x => x.Id == id).ExecuteDeleteAsync() == 1;
+    }
+
     public async Task<IEnumerable<TrailEntity>> SearchTrailByTitle(string? searchValue, int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
@@ -35,7 +40,7 @@ public class TrailRepository : ITrailRepository
         {
             query = query.Where(t => t.Title.Contains(searchValue));
         }
-        
+
         return await query.Skip(skip)
             .Take(pageSize).ToArrayAsync();
     }

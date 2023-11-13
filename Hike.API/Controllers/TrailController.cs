@@ -8,7 +8,7 @@ using Hike.Logic.Services.Interfaces;
 namespace Hike.API.Controllers;
 
 [ApiController]
-[Route("api/trails")]
+[Route("api/trail")]
 public class TrailController : ControllerBase
 {
     private readonly ILogger<TrailController> _logger;
@@ -29,7 +29,7 @@ public class TrailController : ControllerBase
             return NotFound();
         }
 
-        return Ok(trail);
+        return Ok(new TrailModel(trail));
     }
 
     [HttpGet]
@@ -39,9 +39,9 @@ public class TrailController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] TrailEntity entity)
+    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] TrailModel model)
     {
-        AddTrailResponse response = await _service.AddTrail(entity);
+        AddTrailResponse response = await _service.AddTrail(model.ToTrailEntity());
         if (response.FailureReason == null)
         {
             return Ok();
@@ -54,4 +54,13 @@ public class TrailController : ControllerBase
         
         return StatusCode(500, response);
     }
+
+    // [HttpDelete]
+    // public async Task<IActionResult> DeleteTrail([FromRoute] Guid id)
+    // {
+    //     if ()
+    //     {
+    //         
+    //     }
+    // }
 }

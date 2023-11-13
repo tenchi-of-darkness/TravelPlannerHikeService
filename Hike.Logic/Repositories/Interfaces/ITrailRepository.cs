@@ -9,4 +9,6 @@ public interface ITrailRepository
     Task<IEnumerable<TrailEntity>> SearchTrailByTitle(string? searchValue, int page, int pageSize);
     
     Task<bool> AddTrail(TrailEntity entity);
+
+    Task<bool> DeleteTrail(Guid id);
 }

@@ -68,7 +68,7 @@ namespace Hike.API
                 new LineString(new[]
                 {
                     new Coordinate(1, 2),
-                    new Coordinate(3, 4),
+                    new Coordinate(3, 4)
                 })
                 , options);
             schema.Example = new OpenApiString(exampleFeatureString);

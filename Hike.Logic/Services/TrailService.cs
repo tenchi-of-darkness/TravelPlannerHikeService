@@ -37,4 +37,9 @@ public class TrailService : ITrailService
 
         return new AddTrailResponse();
     }
+
+    public async Task<bool> DeleteTrail(Guid id)
+    {
+        return await _trailRepository.DeleteTrail(id);
+    }
 }
