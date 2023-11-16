@@ -16,7 +16,7 @@ public class TrailRepository : ITrailRepository
 
     public async Task<TrailEntity?> GetTrailById(Guid id)
     {
-        TrailEntity? trail = await _context.Trails.FindAsync(id);
+        var trail = await _context.Trails.FindAsync(id);
         return trail;
     }
 

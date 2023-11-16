@@ -55,12 +55,10 @@ public class TrailController : ControllerBase
         return StatusCode(500, response);
     }
 
-    // [HttpDelete]
-    // public async Task<IActionResult> DeleteTrail([FromRoute] Guid id)
-    // {
-    //     if ()
-    //     {
-    //         
-    //     }
-    // }
+    [HttpDelete]
+    public async Task<ActionResult> DeleteTrail(Guid id)
+    {
+        if (await _service.DeleteTrail(id))NotFound();
+        return new NotFoundResult();
+    }
 }
