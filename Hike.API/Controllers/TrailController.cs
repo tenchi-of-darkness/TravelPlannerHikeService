@@ -1,9 +1,8 @@
-using Hike.API.Models;
-using Hike.API.Models.Responses;
-using Hike.Logic.Entities;
-using Hike.Logic.Requests.Trail;
+using Hike.API.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Hike.Logic.Services.Interfaces;
+using Hike.UseCases.Requests.Trail;
+using Hike.UseCases.Responses;
+using Hike.UseCases.Services.Interfaces;
 
 namespace Hike.API.Controllers;
 
@@ -21,7 +20,7 @@ public class TrailController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<TrailModel>> GetTrailById([FromRoute] Guid id)
+    public async Task<ActionResult<TrailDTO>> GetTrailById([FromRoute] Guid id)
     {
         var trail = await _service.GetTrailById(id);
         if (trail == null)
@@ -29,25 +28,26 @@ public class TrailController : ControllerBase
             return NotFound();
         }
 
-        return Ok(new TrailModel(trail));
+        return Ok(new TrailDTO(trail));
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TrailModel>>> GetTrails([FromQuery]GetTrailsRequest request)
+    public async Task<ActionResult<IEnumerable<TrailDTO>>> GetTrails([FromQuery]GetTrailsRequest request)
     {
         return Ok(await _service.GetTrails(request.SearchValue, request.Page, request.PageSize));
     }
 
     [HttpPost]
-    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] TrailModel model)
+    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] AddTrailRequest request)
     {
-        AddTrailResponse response = await _service.AddTrail(model.ToTrailEntity());
-        if (response.FailureReason == null)
+        AddTrailResponse response = await _service.AddTrail(request);
+        AddTrailResponse trailResponse = new AddTrailResponse();
+        if (trailResponse.FailureType == null)
         {
             return Ok();
         }
 
-        if (response.FailureType == FailureType.User)
+        if (trailResponse.FailureType == FailureType.User)
         {
             return BadRequest(response);
         }

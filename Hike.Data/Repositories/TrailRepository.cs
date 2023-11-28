@@ -1,6 +1,8 @@
-﻿using Hike.Data.DbContext;
-using Hike.Logic.Entities;
-using Hike.Logic.Repositories.Interfaces;
+﻿using AutoMapper;
+using Hike.Data.DbContext;
+using Hike.Data.DBO;
+using Hike.Domain.Entities;
+using Hike.Domain.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hike.Data.Repositories;
@@ -8,21 +10,23 @@ namespace Hike.Data.Repositories;
 public class TrailRepository : ITrailRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public TrailRepository(ApplicationDbContext context)
+    public TrailRepository(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<TrailEntity?> GetTrailById(Guid id)
     {
         var trail = await _context.Trails.FindAsync(id);
-        return trail;
+        return _mapper.Map<TrailEntity>(trail);
     }
 
     public async Task<bool> AddTrail(TrailEntity entity)
     {
-        _context.Trails.Add(entity);
+        _context.Trails.Add(_mapper.Map<TrailDBO>(entity));
         return await _context.SaveChangesAsync() == 1;
     }
 
@@ -40,8 +44,8 @@ public class TrailRepository : ITrailRepository
         {
             query = query.Where(t => t.Title.Contains(searchValue));
         }
-
-        return await query.Skip(skip)
-            .Take(pageSize).ToArrayAsync();
+        
+        return _mapper.Map<TrailEntity[]>(await query.Skip(skip)
+            .Take(pageSize).ToArrayAsync());
     }
 }

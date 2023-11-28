@@ -2,11 +2,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.API", "Hike.API\Hike.API.csproj", "{5F2D82F2-94ED-4BAA-AF3A-6A8EA2E95585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Logic", "Hike.Logic\Hike.Logic.csproj", "{8A583CC6-E667-40DC-A515-77B1201F7308}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Domain", "Hike.Domain\Hike.Domain.csproj", "{8A583CC6-E667-40DC-A515-77B1201F7308}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Data", "Hike.Data\Hike.Data.csproj", "{708C6206-F933-40B4-A696-A5824CD3B718}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.Tests", "Hike.Tests\Hike.Tests.csproj", "{CA21B37A-FAA4-4BF4-B79B-8932A2F3F79B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{DDA0D2EC-3FDB-43A8-A0B7-3DCF58D2CAA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hike.UseCases", "Hike.UseCases\Hike.UseCases.csproj", "{F48B84A6-43F6-4C4E-8A07-91C0803A4F4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +34,13 @@ Global
 		{CA21B37A-FAA4-4BF4-B79B-8932A2F3F79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA21B37A-FAA4-4BF4-B79B-8932A2F3F79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA21B37A-FAA4-4BF4-B79B-8932A2F3F79B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA0D2EC-3FDB-43A8-A0B7-3DCF58D2CAA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA0D2EC-3FDB-43A8-A0B7-3DCF58D2CAA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA0D2EC-3FDB-43A8-A0B7-3DCF58D2CAA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA0D2EC-3FDB-43A8-A0B7-3DCF58D2CAA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F48B84A6-43F6-4C4E-8A07-91C0803A4F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F48B84A6-43F6-4C4E-8A07-91C0803A4F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F48B84A6-43F6-4C4E-8A07-91C0803A4F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F48B84A6-43F6-4C4E-8A07-91C0803A4F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

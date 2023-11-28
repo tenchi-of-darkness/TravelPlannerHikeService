@@ -1,4 +1,4 @@
-﻿using Hike.Logic.Entities;
+﻿using Hike.Data.DBO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -23,8 +23,8 @@ public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TrailEntity>().HasKey(x => x.Id);
+        modelBuilder.Entity<TrailDBO>().HasKey(x => x.Id);
     }
     
-    public DbSet<TrailEntity> Trails { get; set; }
+    public DbSet<TrailDBO> Trails { get; set; }
 }

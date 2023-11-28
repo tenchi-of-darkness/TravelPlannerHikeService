@@ -1,13 +1,14 @@
-﻿using Hike.API.Models.Responses;
-using Hike.Logic.Entities;
+﻿using Hike.Domain.Entities;
+using Hike.UseCases.Requests.Trail;
+using Hike.UseCases.Responses;
 
-namespace Hike.Logic.Services.Interfaces;
+namespace Hike.UseCases.Services.Interfaces;
 
 public interface ITrailService
 {
     Task<TrailEntity?> GetTrailById(Guid id);
 
     Task<IEnumerable<TrailEntity>> GetTrails(string? searchValue, int page, int pageSize);
-    Task<AddTrailResponse> AddTrail(TrailEntity entity);
+    Task<AddTrailResponse> AddTrail(AddTrailRequest request);
     Task<bool> DeleteTrail(Guid id);
 }

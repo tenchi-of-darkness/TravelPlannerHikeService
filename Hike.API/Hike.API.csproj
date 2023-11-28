@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11"/>
         <PackageReference Include="NetTopologySuite.IO.GeoJSON4STJ" Version="4.0.0" />
         <PackageReference Include="NetTopologySuite.Features" Version="2.1.0" />
@@ -27,8 +28,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hike.Data\Hike.Data.csproj" />
-      <ProjectReference Include="..\Hike.Logic\Hike.Logic.csproj" />
+      <ProjectReference Include="..\Hike.Domain\Hike.Domain.csproj" />
+      <ProjectReference Include="..\Hike.UseCases\Hike.UseCases.csproj" />
     </ItemGroup>
+
+
 
 
 </Project>

@@ -1,6 +1,7 @@
-﻿using Hike.Logic.Entities;
+﻿
+using Hike.Domain.Entities;
 
-namespace Hike.Logic.Repositories.Interfaces;
+namespace Hike.Domain.Repositories.Interfaces;
 
 public interface ITrailRepository
 {

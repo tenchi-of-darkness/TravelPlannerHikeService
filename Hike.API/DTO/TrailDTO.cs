@@ -1,9 +1,10 @@
-﻿using Hike.Logic.Entities;
+﻿using Hike.Domain.Entities;
+using Hike.Domain.Enum;
 using NetTopologySuite.Geometries;
 
-namespace Hike.API.Models;
+namespace Hike.API.DTO;
 
-public class TrailModel
+public class TrailDTO
 {
     public Guid Id { get; set; }
     
@@ -37,7 +38,7 @@ public class TrailModel
         };
     }
 
-    public TrailModel(TrailEntity entity)
+    public TrailDTO(TrailEntity entity)
     {
         Id = entity.Id;
         LineString = entity.LineString;

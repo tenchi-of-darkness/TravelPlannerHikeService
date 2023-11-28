@@ -1,17 +1,21 @@
-﻿using Hike.API.Models.Responses;
-using Hike.Logic.Entities;
-using Hike.Logic.Repositories.Interfaces;
-using Hike.Logic.Services.Interfaces;
+﻿using AutoMapper;
+using Hike.Domain.Entities;
+using Hike.Domain.Repositories.Interfaces;
+using Hike.UseCases.Requests.Trail;
+using Hike.UseCases.Responses;
+using Hike.UseCases.Services.Interfaces;
 
-namespace Hike.Logic.Services;
+namespace Hike.UseCases.Services;
 
 public class TrailService : ITrailService
 {
     private readonly ITrailRepository _trailRepository;
+    private readonly IMapper _mapper;
 
-    public TrailService(ITrailRepository trailRepository)
+    public TrailService(ITrailRepository trailRepository, IMapper mapper)
     {
         _trailRepository = trailRepository;
+        _mapper = mapper;
     }
     public async Task<TrailEntity?> GetTrailById(Guid id)
     {
@@ -23,14 +27,14 @@ public class TrailService : ITrailService
         return await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
     }
 
-    public async Task<AddTrailResponse> AddTrail(TrailEntity entity)
+    public async Task<AddTrailResponse> AddTrail(AddTrailRequest request)
     {
-        if (entity.Description?.Length > 255)
+        if (request.Description?.Length > 255)
         {
             return new AddTrailResponse(FailureType.User,"Description has too many characters. Only 255 characters allowed");
         }
 
-        if (!await _trailRepository.AddTrail(entity))
+        if (!await _trailRepository.AddTrail(_mapper.Map<TrailEntity>(request)))
         {
             return new AddTrailResponse(FailureType.Server,"Database failure");
         }

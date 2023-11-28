@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Hike.Domain.Enum;
 using NetTopologySuite.Geometries;
 
-namespace Hike.Logic.Entities;
+namespace Hike.Domain.Entities;
 
 public class TrailEntity
 {
@@ -23,17 +24,4 @@ public class TrailEntity
     public long DistanceInMeters { get; set; }
     
     public Guid OwnerUserId { get; set; }
-
-
-    public TrailEntity()
-    {
-        
-    }
-}
-
-public enum TrailDifficulty
-{
-    Beginner=0,
-    Intermediate=10,
-    Hard=20
 }
