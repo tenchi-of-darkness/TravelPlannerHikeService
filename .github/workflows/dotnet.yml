@@ -62,4 +62,4 @@ jobs:
           file: Hike.API/Dockerfile
           tags: |
             tenchiofdarkness/travel-planner-hike-service:latest
-            tenchiofdarkness/travel-planner-hike-service:${{ github.run_id }}
+            tenchiofdarkness/travel-planner-hike-service:${{ github.run_number }}
