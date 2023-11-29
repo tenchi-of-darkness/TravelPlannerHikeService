@@ -5,16 +5,19 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Plan.API/Plan.API.csproj", "Plan.API/"]
-RUN dotnet restore "Plan.API/Plan.API.csproj"
+COPY ["Hike.API/Hike.API.csproj", "Hike.API/"]
+COPY ["Hike.Data/Hike.Data.csproj", "Hike.Data/"]
+COPY ["Hike.Domain/Hike.Domain.csproj", "Hike.Domain/"]
+COPY ["Hike.UseCases/Hike.UseCases.csproj", "Hike.UseCases/"]
+RUN dotnet restore "Hike.API/Hike.API.csproj"
 COPY . .
-WORKDIR "/src/Plan.API"
-RUN dotnet build "Plan.API.csproj" -c Release -o /app/build
+WORKDIR "/src/Hike.API"
+RUN dotnet build "Hike.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Plan.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Hike.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Plan.API.dll"]
+ENTRYPOINT ["dotnet", "Hike.API.dll"]
