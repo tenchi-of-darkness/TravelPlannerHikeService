@@ -1,6 +1,5 @@
 ﻿using Hike.Domain.Entities;
 using Hike.Domain.Enum;
-using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
 
 namespace Hike.UseCases.Requests.Trail;

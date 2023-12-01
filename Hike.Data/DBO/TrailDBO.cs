@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Hike.Domain.Entities;
 using Hike.Domain.Enum;
 using NetTopologySuite.Geometries;
 

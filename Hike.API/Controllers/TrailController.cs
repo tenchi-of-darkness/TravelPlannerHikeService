@@ -41,13 +41,12 @@ public class TrailController : ControllerBase
     public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] AddTrailRequest request)
     {
         AddTrailResponse response = await _service.AddTrail(request);
-        AddTrailResponse trailResponse = new AddTrailResponse();
-        if (trailResponse.FailureType == null)
+        if (response.FailureType == null)
         {
             return Ok();
         }
 
-        if (trailResponse.FailureType == FailureType.User)
+        if (response.FailureType == FailureType.User)
         {
             return BadRequest(response);
         }
