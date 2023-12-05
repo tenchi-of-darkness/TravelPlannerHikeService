@@ -5,11 +5,12 @@ using Hike.UseCases.Responses;
 
 namespace Hike.UseCases.Mappings;
 
-public class TrailMapping: Profile
+public class TrailMapping : Profile
 {
     public TrailMapping()
     {
-        CreateMap<AddTrailRequest ,TrailEntity>();
+        CreateMap<AddTrailRequest, TrailEntity>();
         CreateMap<TrailEntity, AddTrailResponse>();
+        CreateMap<TrailEntity, GetTrailResponse>();
     }
 }

@@ -8,9 +8,10 @@ public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     private readonly IConfiguration _configuration;
 
-    public ApplicationDbContext(IConfiguration configuration)
+    public ApplicationDbContext(IConfiguration configuration, DbSet<TrailDBO> trails)
     {
         _configuration = configuration;
+        Trails = trails;
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

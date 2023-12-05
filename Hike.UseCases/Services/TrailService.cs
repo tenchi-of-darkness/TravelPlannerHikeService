@@ -17,14 +17,16 @@ public class TrailService : ITrailService
         _trailRepository = trailRepository;
         _mapper = mapper;
     }
-    public async Task<TrailEntity?> GetTrailById(Guid id)
+    public async Task<GetTrailResponse?> GetTrailById(Guid id)
     {
-        return await _trailRepository.GetTrailById(id);
+        var entities = await _trailRepository.GetTrailById(id);
+        return _mapper.Map<GetTrailResponse?>(entities);
     }
 
-    public async Task<IEnumerable<TrailEntity>> GetTrails(string? searchValue, int page, int pageSize)
+    public async Task<GetTrailsResponse> GetTrails(string? searchValue, int page, int pageSize)
     {
-        return await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
+        var entities = await _trailRepository.SearchTrailByTitle(searchValue, page, pageSize);
+        return new GetTrailsResponse(_mapper.Map<GetTrailResponse[]>(entities));
     }
 
     public async Task<AddTrailResponse> AddTrail(AddTrailRequest request)

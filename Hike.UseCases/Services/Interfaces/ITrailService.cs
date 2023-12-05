@@ -6,9 +6,9 @@ namespace Hike.UseCases.Services.Interfaces;
 
 public interface ITrailService
 {
-    Task<TrailEntity?> GetTrailById(Guid id);
+    Task<GetTrailResponse?> GetTrailById(Guid id);
 
-    Task<IEnumerable<TrailEntity>> GetTrails(string? searchValue, int page, int pageSize);
+    Task<GetTrailsResponse> GetTrails(string? searchValue, int page, int pageSize);
     Task<AddTrailResponse> AddTrail(AddTrailRequest request);
     Task<bool> DeleteTrail(Guid id);
 }

@@ -6,6 +6,7 @@ using Hike.API.Filter;
 using Hike.Data.Extensions;
 using Hike.UseCases.Extensions;
 using Hike.UseCases.Mappings;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using NetTopologySuite.Geometries;
@@ -36,6 +37,23 @@ builder.Services.AddLogic().AddData(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+var authority = "https://securetoken.google.com/" + builder.Configuration["FireBase:AppId"];
+
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+{
+    options.Authority = authority;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = authority,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["FireBase:AppId"],
+        ValidateLifetime = true
+    };
+});
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +67,8 @@ app.UseCors(options =>
 {
     options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 });
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
