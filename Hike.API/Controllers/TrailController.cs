@@ -1,3 +1,4 @@
+using AutoMapper;
 using Hike.API.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Hike.UseCases.Requests.Trail;
@@ -12,6 +13,7 @@ public class TrailController : ControllerBase
 {
     private readonly ILogger<TrailController> _logger;
     private readonly ITrailService _service;
+    private readonly IMapper _mapper;
 
     public TrailController(ILogger<TrailController> logger, ITrailService service)
     {
@@ -20,7 +22,7 @@ public class TrailController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<TrailDTO>> GetTrailById([FromRoute] Guid id)
+    public async Task<ActionResult<GetTrailResponse>> GetTrailById([FromRoute] Guid id)
     {
         var trail = await _service.GetTrailById(id);
         if (trail == null)
@@ -28,7 +30,7 @@ public class TrailController : ControllerBase
             return NotFound();
         }
 
-        return Ok(new TrailDTO(trail));
+        return Ok(trail);
     }
 
     [HttpGet]
