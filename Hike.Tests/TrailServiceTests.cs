@@ -1,3 +1,4 @@
+﻿using Moq;
 using AutoMapper;
 using Hike.API.Mappings;
 using Hike.Data.Mappings;
@@ -5,19 +6,18 @@ using Hike.Domain.Entities;
 using Hike.Domain.Enum;
 using Hike.Domain.Repositories.Interfaces;
 using Hike.UseCases.Mappings;
+using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Services;
-using Hike.UseCases.Services.Interfaces;
-using Moq;
 using NetTopologySuite.Geometries;
-
-// ReSharper disable PossibleMultipleEnumeration
 
 namespace Hike.Tests;
 
 public class TrailServiceTests
 {
-    private readonly Mock<ITrailRepository> _trailRepositoryMock = new();
-    private readonly ITrailService _instance;
+    private readonly Mock<ITrailRepository> _mockTrailRepo = new(MockBehavior.Strict);
+    private readonly IMapper _mapper;
+
+    private TrailService CreateService() => new(_mockTrailRepo.Object, _mapper);
 
     public TrailServiceTests()
     {
@@ -28,20 +28,15 @@ public class TrailServiceTests
 
             cfg.AddProfile<TrailApiMapping>();
         });
-        IMapper mapper = new Mapper(config);
-        _instance = new TrailService(_trailRepositoryMock.Object, mapper);
+        _mapper = new Mapper(config);
     }
 
     [Fact]
-    public async Task SearchTest()
+    public async Task CanGetTrailById()
     {
-        //Arrange
-        string? searchValue = "";
-        int page = 1;
-        int pageSize = 5;
-        var trailsList = new List<TrailEntity>
-        {
-            new()
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.GetTrailById(It.IsAny<Guid>()))
+            .Returns(Task.FromResult((TrailEntity?)new TrailEntity
             {
                 Description = "Test",
                 Difficulty = TrailDifficulty.Beginner,
@@ -51,15 +46,80 @@ public class TrailServiceTests
                 Rating = 4,
                 Title = "Test",
                 LocationName = "Eindhoven"
-            }
-        };
+            }));
+        var trailService = CreateService();
+        var id = Guid.NewGuid();
 
-        _trailRepositoryMock.Setup(x => x.SearchTrailByTitle(searchValue, page, pageSize)).ReturnsAsync(trailsList);
+        // Act
+        var response = await trailService.GetTrailById(id);
 
-        //Act
-        IEnumerable<TrailEntity> trails = await _instance.GetTrails(searchValue, page, pageSize);
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.GetTrailById(id), Times.Once);
+        Assert.NotNull(response);
+    }
 
-        //Assert
-        Assert.True(trails.Intersect(trailsList).Count() == trails.Count());
+    [Fact]
+    public async Task CanGetTrails()
+    {
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.SearchTrailByTitle(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(new List<TrailEntity>
+            {
+                new()
+                {
+                    Description = "Test",
+                    Difficulty = TrailDifficulty.Beginner,
+                    DistanceInMeters = 5,
+                    Id = Guid.NewGuid(),
+                    LineString = new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }),
+                    Rating = 4,
+                    Title = "Test",
+                    LocationName = "Eindhoven"
+                }
+            });
+        var trailService = CreateService();
+        var trailTitle = "Test";
+        var pageIndex = 1;
+        var pageSize = 1;
+
+        // Act
+        var response = await trailService.GetTrails(trailTitle, pageIndex, pageSize);
+
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.SearchTrailByTitle(trailTitle, pageIndex, pageSize), Times.Once);
+        Assert.NotEmpty(response.Trails);
+    }
+
+    [Fact]
+    public async Task CanAddTrail()
+    {
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(true));
+        var trailService = CreateService();
+        var lineString = LineString.Empty;
+        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+            "Example Description", "location name", 20);
+        // Act
+        var result = await trailService.AddTrail(newTrailRequest);
+
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Once);
+        Assert.True(result.FailureReason == null);
+    }
+
+    [Fact]
+    public async Task CanDeleteTrail()
+    {
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.DeleteTrail(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+        var trailService = CreateService();
+        var id = Guid.NewGuid();
+
+        // Act
+        var result = await trailService.DeleteTrail(id);
+
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.DeleteTrail(id), Times.Once);
+        Assert.True(result);
     }
 }
