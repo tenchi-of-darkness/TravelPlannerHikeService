@@ -1,17 +1,9 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using AutoMapper;
-using Hike.API;
 using Hike.API.Filter;
 using Hike.Data.Extensions;
 using Hike.UseCases.Extensions;
-using Hike.UseCases.Mappings;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Converters;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,10 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureSwaggerGen(options =>
-{
-    options.SchemaFilter<LineStringSchemaFilter>();
-});
+builder.Services.ConfigureSwaggerGen(options => { options.SchemaFilter<LineStringSchemaFilter>(); });
 
 //Dependency Injection of Hike.Domain + Hike.Data
 builder.Services.AddLogic().AddData(builder.Configuration);
@@ -63,10 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(options =>
-{
-    options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-});
+app.UseCors(options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 
 app.UseAuthentication();
 

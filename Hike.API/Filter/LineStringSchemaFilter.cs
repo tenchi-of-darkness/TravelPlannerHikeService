@@ -11,11 +11,8 @@ public class LineStringSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (context.Type != typeof(LineString))
-        {
-            return;
-        }
-        
+        if (context.Type != typeof(LineString)) return;
+
         var options = new JsonSerializerOptions();
         options.Converters.Add(new GeoJsonConverterFactory());
         var exampleFeatureString = JsonSerializer.Serialize(

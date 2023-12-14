@@ -1,5 +1,4 @@
-﻿using Hike.Domain.Entities;
-using Hike.UseCases.Requests.Trail;
+﻿using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 
 namespace Hike.UseCases.Services.Interfaces;

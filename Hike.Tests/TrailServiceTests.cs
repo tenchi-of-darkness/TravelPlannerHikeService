@@ -1,5 +1,4 @@
-﻿using Moq;
-using AutoMapper;
+﻿using AutoMapper;
 using Hike.API.Mappings;
 using Hike.Data.Mappings;
 using Hike.Domain.Entities;
@@ -8,16 +7,15 @@ using Hike.Domain.Repositories.Interfaces;
 using Hike.UseCases.Mappings;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Services;
+using Moq;
 using NetTopologySuite.Geometries;
 
 namespace Hike.Tests;
 
 public class TrailServiceTests
 {
-    private readonly Mock<ITrailRepository> _mockTrailRepo = new(MockBehavior.Strict);
     private readonly IMapper _mapper;
-
-    private TrailService CreateService() => new(_mockTrailRepo.Object, _mapper);
+    private readonly Mock<ITrailRepository> _mockTrailRepo = new(MockBehavior.Strict);
 
     public TrailServiceTests()
     {
@@ -29,6 +27,11 @@ public class TrailServiceTests
             cfg.AddProfile<TrailApiMapping>();
         });
         _mapper = new Mapper(config);
+    }
+
+    private TrailService CreateService()
+    {
+        return new TrailService(_mockTrailRepo.Object, _mapper);
     }
 
     [Fact]

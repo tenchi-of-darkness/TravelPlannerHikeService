@@ -9,14 +9,15 @@ namespace Hike.UseCases.Services;
 
 public class TrailService : ITrailService
 {
-    private readonly ITrailRepository _trailRepository;
     private readonly IMapper _mapper;
+    private readonly ITrailRepository _trailRepository;
 
     public TrailService(ITrailRepository trailRepository, IMapper mapper)
     {
         _trailRepository = trailRepository;
         _mapper = mapper;
     }
+
     public async Task<GetTrailResponse?> GetTrailById(Guid id)
     {
         var entities = await _trailRepository.GetTrailById(id);
@@ -32,14 +33,11 @@ public class TrailService : ITrailService
     public async Task<AddTrailResponse> AddTrail(AddTrailRequest request)
     {
         if (request.Description?.Length > 255)
-        {
-            return new AddTrailResponse(FailureType.User,"Description has too many characters. Only 255 characters allowed");
-        }
+            return new AddTrailResponse(FailureType.User,
+                "Description has too many characters. Only 255 characters allowed");
 
         if (!await _trailRepository.AddTrail(_mapper.Map<TrailEntity>(request)))
-        {
-            return new AddTrailResponse(FailureType.Server,"Database failure");
-        }
+            return new AddTrailResponse(FailureType.Server, "Database failure");
 
         return new AddTrailResponse();
     }

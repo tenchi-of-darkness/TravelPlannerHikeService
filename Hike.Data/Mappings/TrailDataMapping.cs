@@ -4,11 +4,11 @@ using Hike.Domain.Entities;
 
 namespace Hike.Data.Mappings;
 
-public class TrailDataMapping: Profile
+public class TrailDataMapping : Profile
 {
     public TrailDataMapping()
     {
-        CreateMap<TrailDBO ,TrailEntity>();
+        CreateMap<TrailDBO, TrailEntity>();
         CreateMap<TrailEntity, TrailDBO>();
     }
 }

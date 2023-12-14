@@ -37,14 +37,11 @@ public class TrailRepository : ITrailRepository
 
     public async Task<IEnumerable<TrailEntity>> SearchTrailByTitle(string? searchValue, int page, int pageSize)
     {
-        int skip = (page - 1) * pageSize;
+        var skip = (page - 1) * pageSize;
         var query = _context.Trails.AsQueryable();
 
-        if (searchValue != null)
-        {
-            query = query.Where(t => t.Title.Contains(searchValue));
-        }
-        
+        if (searchValue != null) query = query.Where(t => t.Title.Contains(searchValue));
+
         return _mapper.Map<TrailEntity[]>(await query.Skip(skip)
             .Take(pageSize).ToArrayAsync());
     }

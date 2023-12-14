@@ -2,7 +2,7 @@
 
 public enum TrailDifficulty
 {
-    Beginner=0,
-    Intermediate=10,
-    Hard=20
+    Beginner = 0,
+    Intermediate = 10,
+    Hard = 20
 }
