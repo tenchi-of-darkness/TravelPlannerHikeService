@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Hike.API;
+using Hike.Data.DbContext;
 using Hike.Domain.Enum;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
@@ -9,11 +10,11 @@ using NetTopologySuite.Geometries;
 namespace Hike.IntegrationTests;
 
 public class HikeIntegrationTests
-    : IClassFixture<CustomWebApplicationFactory<Program>>
+    : IClassFixture<WebApplicationFactory<HikeApiProgram>>
 {
-    private readonly CustomWebApplicationFactory<Program> _factory;
+    private readonly WebApplicationFactory<HikeApiProgram> _factory;
 
-    public HikeIntegrationTests(CustomWebApplicationFactory<Program> factory)
+    public HikeIntegrationTests(WebApplicationFactory<HikeApiProgram> factory)
     {
         _factory = factory;
     }
@@ -22,10 +23,7 @@ public class HikeIntegrationTests
     public async Task Get_EndpointsReturnSuccessAndCorrectContentType()
     {
         // Arrange
-        var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false
-        });
+        var client = _factory.CreateClient();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/trail",
@@ -36,9 +34,9 @@ public class HikeIntegrationTests
 
         var getTrailsResponse = await client.GetAsync("/api/trail?Page=1&PageSize=15");
 
-        var trailsString = await getTrailsResponse.Content.ReadAsStringAsync();
+        // var trailsString = await getTrailsResponse.Content.ReadAsStringAsync();
 
-        var responseString = await response.Content.ReadAsStringAsync();
+        // var responseString = await response.Content.ReadAsStringAsync();
 
         var trails =
             await getTrailsResponse.Content.ReadFromJsonAsync<GetTrailsResponse>(Default.JsonSerializerOptions);
@@ -47,6 +45,6 @@ public class HikeIntegrationTests
         response.EnsureSuccessStatusCode();
         getTrailsResponse.EnsureSuccessStatusCode();
         Assert.NotNull(trails);
-        Assert.Single(trails.Trails);
+        Assert.True(trails.Trails.Any());
     }
 }

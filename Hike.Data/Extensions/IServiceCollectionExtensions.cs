@@ -16,8 +16,10 @@ public static class ServiceCollectionExtensions
         collection.AddAutoMapper(typeof(TrailDataMapping));
         collection.AddDbContext<ApplicationDbContext>(builder =>
         {
-            builder.UseMySql(configuration.GetConnectionString("Default"),
-                ServerVersion.AutoDetect(configuration.GetConnectionString("NoDatabase")),
+            var connectionString = configuration.GetConnectionString("Default");
+            
+            builder.UseMySql(connectionString,
+                ServerVersion.AutoDetect(connectionString),
                 options => { options.UseNetTopologySuite(); });
         });
         return collection;

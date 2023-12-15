@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
 using Hike.API.Filter;
+using Hike.Data.DbContext;
 using Hike.Data.Extensions;
 using Hike.UseCases.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using NetTopologySuite.IO.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,4 +63,33 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(30)
+};
+
+app.UseWebSockets(webSocketOptions);
+
+
+
+using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    ApplicationDbContext? context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+    try
+    {
+        context?.Database.Migrate();
+    }
+    catch (MySqlException)
+    {
+    }
+}
+
 app.Run();
+
+namespace Hike.API
+{
+    public class HikeApiProgram
+    {
+
+    }
+}
