@@ -6,6 +6,7 @@ using Hike.Domain.Enum;
 using Hike.Domain.Repositories.Interfaces;
 using Hike.UseCases.Mappings;
 using Hike.UseCases.Requests.Trail;
+using Hike.UseCases.Responses;
 using Hike.UseCases.Services;
 using Moq;
 using NetTopologySuite.Geometries;
@@ -94,7 +95,7 @@ public class TrailServiceTests
     }
 
     [Fact]
-    public async Task CanAddTrail()
+    public async Task CanAddTrail_Success()
     {
         // Arrange
         _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(true));
@@ -108,6 +109,47 @@ public class TrailServiceTests
         // Assert
         _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Once);
         Assert.True(result.FailureReason == null);
+    }
+    
+    [Fact]
+    public async Task CanAddTrail_DescriptionTooLong()
+    {
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(true));
+        var trailService = CreateService();
+        var lineString = LineString.Empty;
+        var description = "";
+        for (int i = 0; i < 256; i++)
+        {
+            description += 't';
+        }
+        
+        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+            description, "location name", 20);
+        // Act
+        var result = await trailService.AddTrail(newTrailRequest);
+
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Never);
+        Assert.True(result.FailureType == FailureType.User);
+    }
+    
+    [Fact]
+    public async Task CanAddTrail_DatabaseFailure()
+    {
+        // Arrange
+        _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(false));
+        var trailService = CreateService();
+        var lineString = LineString.Empty;
+        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+            "Example Description", "location name", 20);
+        // Act
+        var result = await trailService.AddTrail(newTrailRequest);
+
+        // Assert
+        _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Once);
+        Assert.True(result.FailureType == FailureType.Server);
+
     }
 
     [Fact]
