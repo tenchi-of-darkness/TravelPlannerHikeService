@@ -9,11 +9,11 @@ public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
     }
 
-    public required DbSet<TrailDBO> Trails { get; set; }
+    public required DbSet<TrailDBO> Trails { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TrailDBO>().HasKey(x => x.Id);
-        modelBuilder.Entity<TrailDBO>().Property(x => x.LineString).HasSrid(4326);
+        modelBuilder.Entity<TrailDBO>().Property(x => x.LineString);
     }
 }

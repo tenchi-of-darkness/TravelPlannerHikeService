@@ -15,25 +15,27 @@ public class TrailController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ITrailService _service;
 
-    public TrailController(ILogger<TrailController> logger, ITrailService service)
+    public TrailController(ILogger<TrailController> logger, ITrailService service, IMapper mapper)
     {
         _logger = logger;
         _service = service;
+        _mapper = mapper;
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<GetTrailResponse>> GetTrailById([FromRoute] Guid id)
+    public async Task<ActionResult<TrailDTO>> GetTrailById([FromRoute] Guid id)
     {
         var trail = await _service.GetTrailById(id);
         if (trail == null) return NotFound();
 
-        return Ok(trail);
+        return Ok(_mapper.Map<TrailDTO>(trail));
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TrailDTO>>> GetTrails([FromQuery] GetTrailsRequest request)
     {
-        return Ok(await _service.GetTrails(request.SearchValue, request.Page, request.PageSize));
+        var response = await _service.GetTrails(request.SearchValue, request.Page, request.PageSize);
+        return Ok(_mapper.Map<TrailDTO[]>(response.Trails));
     }
 
     [HttpPost]
@@ -50,7 +52,11 @@ public class TrailController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult> DeleteTrail(Guid id)
     {
-        if (await _service.DeleteTrail(id)) NotFound();
-        return new NotFoundResult();
+        if (await _service.DeleteTrail(id))
+        {
+            Ok();
+        }
+
+        return NotFound();
     }
 }

@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Hike.API;
+using Hike.API.DTO;
 using Hike.Data.DbContext;
 using Hike.Domain.Enum;
 using Hike.UseCases.Requests.Trail;
@@ -34,17 +35,14 @@ public class HikeIntegrationTests
 
         var getTrailsResponse = await client.GetAsync("/api/trail?Page=1&PageSize=15");
 
-        // var trailsString = await getTrailsResponse.Content.ReadAsStringAsync();
-
-        // var responseString = await response.Content.ReadAsStringAsync();
-
         var trails =
-            await getTrailsResponse.Content.ReadFromJsonAsync<GetTrailsResponse>(Default.JsonSerializerOptions);
+            await getTrailsResponse.Content.ReadFromJsonAsync<IEnumerable<TrailDTO>>(Default.JsonSerializerOptions);
 
+        
         // Assert
         response.EnsureSuccessStatusCode();
         getTrailsResponse.EnsureSuccessStatusCode();
         Assert.NotNull(trails);
-        Assert.True(trails.Trails.Any());
+        Assert.True(trails.Any());
     }
 }
