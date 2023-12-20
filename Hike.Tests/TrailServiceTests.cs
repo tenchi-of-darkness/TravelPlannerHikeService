@@ -24,7 +24,6 @@ public class TrailServiceTests
         {
             cfg.AddProfile<TrailMapping>();
             cfg.AddProfile<TrailDataMapping>();
-
             cfg.AddProfile<TrailApiMapping>();
         });
         _mapper = new Mapper(config);
@@ -40,17 +39,19 @@ public class TrailServiceTests
     {
         // Arrange
         _mockTrailRepo.Setup(repo => repo.GetTrailById(It.IsAny<Guid>()))
-            .Returns(Task.FromResult((TrailEntity?)new TrailEntity
-            {
-                Description = "Test",
-                Difficulty = TrailDifficulty.Beginner,
-                DistanceInMeters = 5,
-                Id = Guid.NewGuid(),
-                LineString = new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }),
-                Rating = 4,
-                Title = "Test",
-                LocationName = "Eindhoven"
-            }));
+            .ReturnsAsync(new TrailEntity
+                {
+                    Description = "Test",
+                    Difficulty = TrailDifficulty.Beginner,
+                    DistanceInMeters = 5,
+                    Id = Guid.NewGuid(),
+                    LineString = new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }),
+                    Rating = 4,
+                    Title = "Test",
+                    LocationName = "Eindhoven"
+                }
+
+            );
         var trailService = CreateService();
         var id = Guid.NewGuid();
 
