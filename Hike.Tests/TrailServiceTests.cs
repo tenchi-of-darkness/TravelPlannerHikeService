@@ -38,29 +38,28 @@ public class TrailServiceTests
     public async Task CanGetTrailById()
     {
         // Arrange
+        var trail = new TrailEntity()
+        {
+            Description = "Test",
+            Difficulty = TrailDifficulty.Beginner,
+            DistanceInMeters = 5,
+            Id = Guid.NewGuid(),
+            LineString = new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }),
+            Rating = 4,
+            Title = "Test",
+            LocationName = "Eindhoven"
+        };
         _mockTrailRepo.Setup(repo => repo.GetTrailById(It.IsAny<Guid>()))
-            .ReturnsAsync(new TrailEntity
-                {
-                    Description = "Test",
-                    Difficulty = TrailDifficulty.Beginner,
-                    DistanceInMeters = 5,
-                    Id = Guid.NewGuid(),
-                    LineString = new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }),
-                    Rating = 4,
-                    Title = "Test",
-                    LocationName = "Eindhoven"
-                }
-
-            );
+            .ReturnsAsync(trail);
         var trailService = CreateService();
         var id = Guid.NewGuid();
+        var response = _mapper.Map<GetTrailResponse>(trail);
 
         // Act
-        var response = await trailService.GetTrailById(id);
+        var result = await trailService.GetTrailById(id);
 
         // Assert
-        _mockTrailRepo.Verify(repo => repo.GetTrailById(id), Times.Once);
-        Assert.NotNull(response);
+        Assert.Equal(result, response);
     }
 
     [Fact]
@@ -111,7 +110,7 @@ public class TrailServiceTests
         _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Once);
         Assert.True(result.FailureReason == null);
     }
-    
+
     [Fact]
     public async Task CanAddTrail_DescriptionTooLong()
     {
@@ -124,7 +123,7 @@ public class TrailServiceTests
         {
             description += 't';
         }
-        
+
         var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
             description, "location name", 20);
         // Act
@@ -134,7 +133,7 @@ public class TrailServiceTests
         _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Never);
         Assert.True(result.FailureType == FailureType.User);
     }
-    
+
     [Fact]
     public async Task CanAddTrail_DatabaseFailure()
     {
@@ -150,7 +149,6 @@ public class TrailServiceTests
         // Assert
         _mockTrailRepo.Verify(repo => repo.AddTrail(It.IsAny<TrailEntity>()), Times.Once);
         Assert.True(result.FailureType == FailureType.Server);
-
     }
 
     [Fact]

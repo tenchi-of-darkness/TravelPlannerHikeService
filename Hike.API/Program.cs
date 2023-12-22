@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using NetTopologySuite.IO.Converters;
+using Hike.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSignalR();
 
 builder.Services.ConfigureSwaggerGen(options => { options.SchemaFilter<LineStringSchemaFilter>(); });
 
@@ -63,14 +66,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var webSocketOptions = new WebSocketOptions
-{
-    KeepAliveInterval = TimeSpan.FromSeconds(30)
-};
-
-app.UseWebSockets(webSocketOptions);
-
-
+app.MapHub<MapHub>("/map-hub");
 
 using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
