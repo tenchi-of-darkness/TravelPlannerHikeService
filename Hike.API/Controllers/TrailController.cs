@@ -3,6 +3,7 @@ using Hike.API.DTO;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hike.API.Controllers;
@@ -42,11 +43,12 @@ public class TrailController : ControllerBase
     public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] AddTrailRequest request)
     {
         var response = await _service.AddTrail(request);
-        if (response.FailureType == null) return Ok();
-
-        if (response.FailureType == FailureType.User) return BadRequest(response);
-
-        return StatusCode(500, response);
+        return response.FailureType switch
+        {
+            null => Ok(),
+            FailureType.User => BadRequest(response),
+            _ => StatusCode(500, response)
+        };
     }
 
     [HttpDelete]

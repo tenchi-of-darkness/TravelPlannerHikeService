@@ -4,6 +4,7 @@ using Hike.Domain.Repositories.Interfaces;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services.Interfaces;
+using Hike.UseCases.Utilities;
 
 namespace Hike.UseCases.Services;
 
@@ -11,11 +12,13 @@ public class TrailService : ITrailService
 {
     private readonly IMapper _mapper;
     private readonly ITrailRepository _trailRepository;
+    private readonly IAuthenticationUtility _authenticationUtility;
 
-    public TrailService(ITrailRepository trailRepository, IMapper mapper)
+    public TrailService(ITrailRepository trailRepository, IMapper mapper, IAuthenticationUtility authenticationUtility)
     {
         _trailRepository = trailRepository;
         _mapper = mapper;
+        _authenticationUtility = authenticationUtility;
     }
 
     public async Task<GetTrailResponse?> GetTrailById(Guid id)
@@ -36,7 +39,18 @@ public class TrailService : ITrailService
             return new AddTrailResponse(FailureType.User,
                 "Description has too many characters. Only 255 characters allowed");
 
-        if (!await _trailRepository.AddTrail(_mapper.Map<TrailEntity>(request)))
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return new AddTrailResponse(FailureType.User, "Authentication failure");
+        }
+
+        var entity = _mapper.Map<TrailEntity>(request);
+        
+        entity.OwnerUserId = userId;
+        
+        if (!await _trailRepository.AddTrail(entity))
             return new AddTrailResponse(FailureType.Server, "Database failure");
 
         return new AddTrailResponse();

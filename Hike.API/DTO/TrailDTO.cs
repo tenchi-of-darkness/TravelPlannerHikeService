@@ -13,4 +13,4 @@ public record TrailDTO(
     string LocationName,
     long DistanceInMeters,
     Guid Id,
-    Guid OwnerUserId);
+    string OwnerUserId);

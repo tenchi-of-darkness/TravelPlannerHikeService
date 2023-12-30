@@ -8,6 +8,7 @@ using Hike.UseCases.Mappings;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services;
+using Hike.UseCases.Utilities;
 using Moq;
 using NetTopologySuite.Geometries;
 
@@ -17,6 +18,8 @@ public class TrailServiceTests
 {
     private readonly IMapper _mapper;
     private readonly Mock<ITrailRepository> _mockTrailRepo = new(MockBehavior.Strict);
+    private readonly Mock<IAuthenticationUtility> _authenticationUtilityMock = new (MockBehavior.Strict);
+    private const string UserId = "test";
 
     public TrailServiceTests()
     {
@@ -31,7 +34,8 @@ public class TrailServiceTests
 
     private TrailService CreateService()
     {
-        return new TrailService(_mockTrailRepo.Object, _mapper);
+        _authenticationUtilityMock.Setup(x => x.GetUserId()).Returns(UserId);
+        return new TrailService(_mockTrailRepo.Object, _mapper, _authenticationUtilityMock.Object);
     }
 
     [Fact]

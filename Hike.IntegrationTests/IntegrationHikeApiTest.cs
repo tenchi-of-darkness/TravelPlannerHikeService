@@ -5,6 +5,7 @@ using Hike.Data.DbContext;
 using Hike.Domain.Enum;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NetTopologySuite.Geometries;
 
@@ -17,7 +18,7 @@ public class HikeIntegrationTests
 
     public HikeIntegrationTests(WebApplicationFactory<HikeApiProgram> factory)
     {
-        _factory = factory;
+        _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("IntegrationTest"));;
     }
 
     [Fact]
@@ -34,6 +35,8 @@ public class HikeIntegrationTests
 
 
         var getTrailsResponse = await client.GetAsync("/api/trail?Page=1&PageSize=15");
+
+        var test = await getTrailsResponse.Content.ReadAsStringAsync();
 
         var trails =
             await getTrailsResponse.Content.ReadFromJsonAsync<IEnumerable<TrailDTO>>(Default.JsonSerializerOptions);

@@ -23,5 +23,5 @@ public class TrailEntity
 
     public long DistanceInMeters { get; set; }
 
-    public Guid OwnerUserId { get; set; }
+    public string OwnerUserId { get; set; }
 }

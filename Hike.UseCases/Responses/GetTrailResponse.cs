@@ -12,4 +12,4 @@ public record GetTrailResponse(
     string LocationName,
     long DistanceInMeters,
     Guid Id,
-    Guid OwnerUserId);
+    string OwnerUserId);
