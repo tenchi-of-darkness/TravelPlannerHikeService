@@ -51,8 +51,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-restore --verbosity normal Hike.Tests/Hike.Tests.csproj
-        
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --no-restore --verbosity normal Hike.Tests/Hike.Tests.csproj
+      - name: Codecov
+        uses: codecov/codecov-action@v1  
+  
   integration-test:
     runs-on: ubuntu-latest
     needs: qodana
@@ -73,8 +75,10 @@ jobs:
           mysql database: 'hike-service'
           mysql root password: '12345'
       - name: Test
-        run: dotnet test --no-restore --verbosity normal Hike.IntegrationTests/Hike.IntegrationTests.csproj
-        
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --no-restore --verbosity normal Hike.IntegrationTests/Hike.IntegrationTests.csproj
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+
   docker:
     runs-on: ubuntu-latest
     needs: [test, integration-test]
