@@ -23,11 +23,22 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-     
+
+  qodana:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2023.2
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}   
 
   test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: qodana
     
     steps:
       - uses: actions/checkout@v3
@@ -44,7 +55,7 @@ jobs:
         
   integration-test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: qodana
 
     steps:
       - uses: actions/checkout@v3
@@ -88,6 +99,10 @@ jobs:
           tags: |
             tenchiofdarkness/travel-planner-hike-service:latest
             tenchiofdarkness/travel-planner-hike-service:${{ github.run_number }}
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [ docker ]
+    steps:
       - name: Webhook
         uses: distributhor/workflow-webhook@v3
         with:
