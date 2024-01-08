@@ -20,7 +20,7 @@ public class TrailRepository : ITrailRepository
 
     public async Task<TrailEntity?> GetTrailById(Guid id)
     {
-        var trail = await _context.Trails.FindAsync(id);
+        var trail = await _context.Trails.Where(x=>x.Id==id).FirstOrDefaultAsync();
         return _mapper.Map<TrailEntity>(trail);
     }
 

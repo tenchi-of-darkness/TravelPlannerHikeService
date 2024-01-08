@@ -51,12 +51,12 @@ public class TrailController : ControllerBase
         };
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteTrail(Guid id)
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> DeleteTrail([FromRoute] Guid id)
     {
         if (await _service.DeleteTrail(id))
         {
-            Ok();
+            return Ok();
         }
 
         return NotFound();

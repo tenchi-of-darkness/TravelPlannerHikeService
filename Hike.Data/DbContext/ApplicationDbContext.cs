@@ -1,4 +1,5 @@
 ﻿using Hike.Data.DBO;
+using Hike.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hike.Data.DbContext;
@@ -13,7 +14,10 @@ public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TrailDBO>().HasKey(x => x.Id);
-        modelBuilder.Entity<TrailDBO>().Property(x => x.LineString);
+        modelBuilder.Entity<TrailDBO>(builder =>
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.LineString);
+        });
     }
 }

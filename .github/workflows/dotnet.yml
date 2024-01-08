@@ -72,7 +72,7 @@ jobs:
       - name: Setup Database
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql database: 'hike-service'
+          mysql database: 'hike-test-service'
           mysql root password: '12345'
       - name: Test
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --no-restore --verbosity normal Hike.IntegrationTests/Hike.IntegrationTests.csproj
