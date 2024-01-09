@@ -33,6 +33,32 @@ public class TrailService : ITrailService
         return new GetTrailsResponse(_mapper.Map<GetTrailResponse[]>(entities));
     }
 
+    public async Task<GetTrailsResponse?> GetUserTrails(int page, int pageSize)
+    {
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return null;
+        }
+
+        var entities = await _trailRepository.SearchTrailByUser(userId, page, pageSize);
+        return new GetTrailsResponse(_mapper.Map<GetTrailResponse[]>(entities));
+    }
+
+    public async Task<GetTrailsResponse?> GetUserFavoriteTrails(int page, int pageSize)
+    {
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return null;
+        }
+
+        var entities = await _trailRepository.SearchFavoriteTrailsByUser(userId, page, pageSize);
+        return new GetTrailsResponse(_mapper.Map<GetTrailResponse[]>(entities));
+    }
+
     public async Task<AddTrailResponse> AddTrail(AddTrailRequest request)
     {
         if (request.Description?.Length > 255)
@@ -47,10 +73,25 @@ public class TrailService : ITrailService
         }
 
         var entity = _mapper.Map<TrailEntity>(request);
-        
+
         entity.OwnerUserId = userId;
-        
+
         if (!await _trailRepository.AddTrail(entity))
+            return new AddTrailResponse(FailureType.Server, "Database failure");
+
+        return new AddTrailResponse();
+    }
+
+    public async Task<AddTrailResponse> AddTrailToFavorites(Guid id)
+    {
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return new AddTrailResponse(FailureType.User, "Authentication failure");
+        }
+
+        if (!await _trailRepository.AddTrailToFavorites(userId, id))
             return new AddTrailResponse(FailureType.Server, "Database failure");
 
         return new AddTrailResponse();

@@ -33,9 +33,35 @@ public class TrailController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TrailDTO>>> GetTrails([FromQuery] GetTrailsRequest request)
+    public async Task<ActionResult<IEnumerable<TrailDTO>>> GetTrails([FromQuery] SearchTrailsRequest request)
     {
         var response = await _service.GetTrails(request.SearchValue, request.Page, request.PageSize);
+        return Ok(_mapper.Map<TrailDTO[]>(response.Trails));
+    }
+
+    [HttpGet("user")]
+    public async Task<ActionResult<IEnumerable<TrailDTO>>> GetUserTrails([FromQuery] GetTrailsRequest request)
+    {
+        var response = await _service.GetUserTrails(request.Page, request.PageSize);
+
+        if (response == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(_mapper.Map<TrailDTO[]>(response.Trails));
+    }
+
+    [HttpGet("favorite")]
+    public async Task<ActionResult<IEnumerable<TrailDTO>>> GetFavoriteTrails([FromQuery] GetTrailsRequest request)
+    {
+        var response = await _service.GetUserFavoriteTrails(request.Page, request.PageSize);
+
+        if (response == null)
+        {
+            return NotFound();
+        }
+
         return Ok(_mapper.Map<TrailDTO[]>(response.Trails));
     }
 
@@ -43,6 +69,18 @@ public class TrailController : ControllerBase
     public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] AddTrailRequest request)
     {
         var response = await _service.AddTrail(request);
+        return response.FailureType switch
+        {
+            null => Ok(),
+            FailureType.User => BadRequest(response),
+            _ => StatusCode(500, response)
+        };
+    }
+
+    [HttpPost("{id:guid}/favorite")]
+    public async Task<ActionResult<AddTrailResponse>> AddTrailToFavorites([FromRoute] Guid id)
+    {
+        var response = await _service.AddTrailToFavorites(id);
         return response.FailureType switch
         {
             null => Ok(),

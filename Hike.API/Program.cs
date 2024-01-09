@@ -23,7 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(x => x.SupportedProtocols = new List<string>{"json"});
 
 builder.Services.ConfigureSwaggerGen(options => { options.SchemaFilter<LineStringSchemaFilter>(); });
 
@@ -53,6 +53,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseRouting();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -64,9 +65,14 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(x =>
+{
+    x.MapControllers();
 
-app.MapHub<MapHub>("/map-hub");
+    x.MapHub<MapHub>("/api/map-hub");
+});
+
+
 
 using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {

@@ -1,3 +1,3 @@
-﻿namespace Hike.UseCases.Requests.Trail;
+namespace Hike.UseCases.Requests.Trail;
 
-public record GetTrailsRequest(string? SearchValue, int Page = 1, int PageSize = 10);
+public record GetTrailsRequest(int Page = 1, int PageSize = 10);
