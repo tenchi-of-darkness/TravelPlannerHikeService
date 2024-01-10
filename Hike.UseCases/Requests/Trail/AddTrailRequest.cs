@@ -4,7 +4,8 @@ using NetTopologySuite.Geometries;
 namespace Hike.UseCases.Requests.Trail;
 
 public record AddTrailRequest(
-    LineString LineString,
+    Point Start,
+    Point End,
     float Rating,
     TrailDifficulty Difficulty,
     string Title,
