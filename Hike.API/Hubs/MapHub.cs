@@ -1,11 +1,19 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Hike.UseCases.Utilities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Hike.API.Hubs;
 
 public class MapHub : Hub
 {
-    public async Task SendLocation(string userId, string userName, double latitude, double longitude)
+    public async Task SendLocation(string userName, double latitude, double longitude)
     {
-        await Clients.All.SendAsync("ReceiveLocation", userId, userName, latitude, longitude);
+        Console.WriteLine(Context.UserIdentifier);
+
+        if (Context.UserIdentifier != null)
+        {
+            await Clients.All.SendAsync("ReceiveLocation", Context.UserIdentifier, userName, latitude, longitude);
+        }
     }
 }

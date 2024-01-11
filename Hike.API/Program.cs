@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using NetTopologySuite.IO.Converters;
 using Hike.API.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,23 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["FireBase:ProjectId"],
         ValidateLifetime = true
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/api/map-hub")))
+            {
+                // Read the token out of the query string
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
