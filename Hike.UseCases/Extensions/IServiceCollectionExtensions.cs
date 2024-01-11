@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddLogic(this IServiceCollection collection)
     {
         collection.AddTransient<ITrailService, TrailService>();
+        collection.AddTransient<IRouteService, RouteService>();
         collection.AddTransient<IAuthenticationUtility, AuthenticationUtility>();
         collection.AddAutoMapper(typeof(TrailMapping));
         return collection;

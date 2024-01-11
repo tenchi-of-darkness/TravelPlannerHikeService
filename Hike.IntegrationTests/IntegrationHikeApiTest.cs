@@ -20,7 +20,6 @@ public class HikeIntegrationTests
     public HikeIntegrationTests(WebApplicationFactory<HikeApiProgram> factory)
     {
         _factory = factory.WithWebHostBuilder(builder => builder.UseEnvironment("IntegrationTest"));
-        ;
     }
 
     [Fact]
@@ -31,7 +30,7 @@ public class HikeIntegrationTests
 
         // Act
         var response = await client.PostAsJsonAsync("/api/trail",
-            new AddTrailRequest(new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }), 3f,
+            new AddTrailRequest(new Point(55,8), new Point(55,9), 3f,
                 TrailDifficulty.Beginner, "", "", "", 1L),
             Default.JsonSerializerOptions);
 
@@ -59,8 +58,8 @@ public class HikeIntegrationTests
 
         // Act
         var response = await client.PostAsJsonAsync("/api/trail",
-            new AddTrailRequest(new LineString(new[] { new Coordinate(1, 1), new Coordinate(1, 2) }), 3f,
-                TrailDifficulty.Beginner, "Trail", "gdfhdh", "ghhfd", 1L),
+            new AddTrailRequest(new Point(55,8), new Point(55,9), 3f,
+                TrailDifficulty.Beginner, "", "", "", 1L),
             Default.JsonSerializerOptions);
         var getTrailsResponse = await client.GetAsync("/api/trail?Page=1&PageSize=15");
         var trail =

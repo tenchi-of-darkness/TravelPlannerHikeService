@@ -20,15 +20,15 @@ public class TrailService : ITrailService
     private readonly IMapper _mapper;
     private readonly ITrailRepository _trailRepository;
     private readonly IAuthenticationUtility _authenticationUtility;
-    private readonly string _openRouteServiceApiKey;
+    private readonly IRouteService _routeService;
 
     public TrailService(ITrailRepository trailRepository, IMapper mapper, IAuthenticationUtility authenticationUtility,
-        IConfiguration configuration)
+        IRouteService routeService)
     {
         _trailRepository = trailRepository;
         _mapper = mapper;
         _authenticationUtility = authenticationUtility;
-        _openRouteServiceApiKey = configuration["OpenRouteService:ApiKey"] ?? throw new Exception();
+        _routeService = routeService;
     }
 
     public async Task<GetTrailResponse?> GetTrailById(Guid id)
@@ -85,37 +85,14 @@ public class TrailService : ITrailService
         var entity = _mapper.Map<TrailEntity>(request);
 
         entity.OwnerUserId = userId;
+        
+        var lineString = await _routeService.GetRoute(request.Start, request.End);
 
-        var start = $"{request.Start.Y},{request.Start.X}";
-        var end = $"{request.End.Y},{request.End.X}";
-
-        var url =
-            $"https://api.openrouteservice.org/v2/directions/foot-hiking?api_key={_openRouteServiceApiKey}&start={start}&end={end}";
-
-        HttpResponseMessage response = await _client.GetAsync(url);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            return new AddTrailResponse(FailureType.Server, "Routing api failure status code: " + response.StatusCode);
-        }
-
-        string responseBody = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions(JsonSerializerOptions.Default)
-        {
-            ReferenceHandler = ReferenceHandler.IgnoreCycles,
-        };
-        options.Converters.Add(new JsonStringEnumConverter());
-        options.Converters.Add(new GeoJsonConverterFactory());
-        var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(responseBody, options);
-        var lineString = featureCollection?.Where(x => x.Geometry is LineString).Select(x => (LineString)x.Geometry)
-            .FirstOrDefault();
         if (lineString == null)
-        {
-            return new AddTrailResponse(FailureType.Server, "Routing api failure status code: " + response.StatusCode);
-        }
+            return new AddTrailResponse(FailureType.Server, "Route Api failure");
 
         entity.LineString = lineString;
-
+        
         if (!await _trailRepository.AddTrail(entity))
             return new AddTrailResponse(FailureType.Server, "Database failure");
 
