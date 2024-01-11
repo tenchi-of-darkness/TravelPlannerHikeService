@@ -27,7 +27,7 @@ public class RouteService: IRouteService
     {
         if (_webHostEnvironment.IsEnvironment("IntegrationTest"))
         {
-            return LineString.Empty;
+            return new LineString(new []{new Coordinate(55,8),new Coordinate(55,9)});
         }
         
         var openRouteServiceApiKey = _configuration["OpenRouteService:ApiKey"] ?? throw new Exception();
