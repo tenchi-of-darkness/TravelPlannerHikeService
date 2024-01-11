@@ -8,6 +8,7 @@ using Hike.UseCases.Mappings;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services;
+using Hike.UseCases.Services.Interfaces;
 using Hike.UseCases.Utilities;
 using Moq;
 using NetTopologySuite.Geometries;
@@ -20,6 +21,7 @@ public class TrailServiceTests
     private readonly Mock<ITrailRepository> _mockTrailRepo = new(MockBehavior.Strict);
     private readonly Mock<IAuthenticationUtility> _authenticationUtilityMock = new (MockBehavior.Strict);
     private const string UserId = "test";
+    private readonly Mock<IRouteService> _routeServiceMock = new (MockBehavior.Strict);
 
     public TrailServiceTests()
     {
@@ -35,7 +37,7 @@ public class TrailServiceTests
     private TrailService CreateService()
     {
         _authenticationUtilityMock.Setup(x => x.GetUserId()).Returns(UserId);
-        return new TrailService(_mockTrailRepo.Object, _mapper, _authenticationUtilityMock.Object);
+        return new TrailService(_mockTrailRepo.Object, _mapper, _authenticationUtilityMock.Object, _routeServiceMock.Object);
     }
 
     [Fact]
@@ -102,10 +104,10 @@ public class TrailServiceTests
     public async Task CanAddTrail_Success()
     {
         // Arrange
+        _routeServiceMock.Setup(x => x.GetRoute(It.IsAny<Point>(), It.IsAny<Point>())).ReturnsAsync(LineString.Empty);
         _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(true));
         var trailService = CreateService();
-        var lineString = LineString.Empty;
-        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+        var newTrailRequest = new AddTrailRequest(new Point(55,8), new Point(55,9), 4.5f, TrailDifficulty.Beginner, "Example Title",
             "Example Description", "location name", 20);
         // Act
         var result = await trailService.AddTrail(newTrailRequest);
@@ -128,7 +130,7 @@ public class TrailServiceTests
             description += 't';
         }
 
-        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+        var newTrailRequest = new AddTrailRequest(new Point(55,8), new Point(55,9), 4.5f, TrailDifficulty.Beginner, "Example Title",
             description, "location name", 20);
         // Act
         var result = await trailService.AddTrail(newTrailRequest);
@@ -143,9 +145,10 @@ public class TrailServiceTests
     {
         // Arrange
         _mockTrailRepo.Setup(repo => repo.AddTrail(It.IsAny<TrailEntity>())).Returns(Task.FromResult(false));
+        _routeServiceMock.Setup(x => x.GetRoute(It.IsAny<Point>(), It.IsAny<Point>())).ReturnsAsync(LineString.Empty);
         var trailService = CreateService();
         var lineString = LineString.Empty;
-        var newTrailRequest = new AddTrailRequest(lineString, 4.5f, TrailDifficulty.Beginner, "Example Title",
+        var newTrailRequest = new AddTrailRequest(new Point(55,8), new Point(55,9), 4.5f, TrailDifficulty.Beginner, "Example Title",
             "Example Description", "location name", 20);
         // Act
         var result = await trailService.AddTrail(newTrailRequest);
