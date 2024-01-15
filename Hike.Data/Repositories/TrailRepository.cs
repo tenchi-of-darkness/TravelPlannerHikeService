@@ -31,7 +31,7 @@ public class TrailRepository : ITrailRepository
 
         if (searchValue != null) query = query.Where(t => t.Title.Contains(searchValue));
 
-        return _mapper.Map<TrailEntity[]>(await query.Skip(skip)
+        return _mapper.Map<TrailEntity[]>(await query.OrderByDescending(t => t.Id).Skip(skip)
             .Take(pageSize).ToArrayAsync());
     }
 
@@ -40,7 +40,7 @@ public class TrailRepository : ITrailRepository
         var skip = (page - 1) * pageSize;
         var query = _context.Trails.Where(t => t.OwnerUserId == userId);
 
-        return _mapper.Map<TrailEntity[]>(await query.Skip(skip)
+        return _mapper.Map<TrailEntity[]>(await query.OrderByDescending(t => t.Id).Skip(skip)
             .Take(pageSize).ToArrayAsync());
     }
 
@@ -49,7 +49,7 @@ public class TrailRepository : ITrailRepository
         var skip = (page - 1) * pageSize;
         var query = _context.Users.Where(t => t.Id == userId).SelectMany(x => x.FavoriteTrails);
 
-        return _mapper.Map<TrailEntity[]>(await query.Skip(skip)
+        return _mapper.Map<TrailEntity[]>(await query.OrderByDescending(t => t.Id).Skip(skip)
             .Take(pageSize).ToArrayAsync());
     }
 
