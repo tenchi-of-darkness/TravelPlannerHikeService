@@ -11,7 +11,7 @@ using NetTopologySuite.IO.Converters;
 
 namespace Hike.UseCases.Services;
 
-public class RouteService: IRouteService
+public class RouteService : IRouteService
 {
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _webHostEnvironment;
@@ -27,16 +27,20 @@ public class RouteService: IRouteService
     {
         if (_webHostEnvironment.IsEnvironment("IntegrationTest"))
         {
-            return new LineString(new []{new Coordinate(55,8),new Coordinate(55,9)});
+            return new LineString(new[] { new Coordinate(55, 8), new Coordinate(55, 9) });
         }
-        
+
         var openRouteServiceApiKey = _configuration["OpenRouteService:ApiKey"] ?? throw new Exception();
-        
-        var startString = $"{start.Y},{start.X}";
-        var endString = $"{end.Y},{end.X}";
+
+        var startString =
+            $"{start.Y.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)},{start.X.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)}";
+        var endString =
+            $"{end.Y.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)},{end.X.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)}";
 
         var url =
             $"https://api.openrouteservice.org/v2/directions/foot-hiking?api_key={openRouteServiceApiKey}&start={startString}&end={endString}";
+
+        Console.WriteLine(url);
 
         HttpResponseMessage response = await _client.GetAsync(url);
 
