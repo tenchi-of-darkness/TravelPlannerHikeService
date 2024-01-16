@@ -1,6 +1,4 @@
-﻿using Hike.Domain.Entities;
-
-namespace Hike.Data.DBO;
+﻿namespace Hike.Data.DBO;
 
 public class UserDBO
 {

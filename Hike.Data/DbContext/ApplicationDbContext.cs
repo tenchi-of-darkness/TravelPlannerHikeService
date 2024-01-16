@@ -1,5 +1,4 @@
 ﻿using Hike.Data.DBO;
-using Hike.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hike.Data.DbContext;

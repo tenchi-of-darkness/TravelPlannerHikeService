@@ -1,5 +1,4 @@
-﻿using Hike.Domain.Entities;
-using Hike.Domain.Enum;
+﻿using Hike.Domain.Enum;
 using NetTopologySuite.Geometries;
 
 namespace Hike.API.DTO;

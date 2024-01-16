@@ -2,10 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using Hike.API;
 using Hike.API.DTO;
-using Hike.Data.DbContext;
 using Hike.Domain.Enum;
 using Hike.UseCases.Requests.Trail;
-using Hike.UseCases.Responses;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NetTopologySuite.Geometries;
@@ -74,4 +72,6 @@ public class HikeIntegrationTests
         deleteResponse.EnsureSuccessStatusCode();
         Assert.True(getTrailResponse.StatusCode == HttpStatusCode.NotFound);
     }
+    
+    
 }

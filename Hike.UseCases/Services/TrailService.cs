@@ -1,16 +1,10 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using AutoMapper;
+﻿using AutoMapper;
 using Hike.Domain.Entities;
 using Hike.Domain.Repositories.Interfaces;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services.Interfaces;
 using Hike.UseCases.Utilities;
-using Microsoft.Extensions.Configuration;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.IO.Converters;
 
 namespace Hike.UseCases.Services;
 

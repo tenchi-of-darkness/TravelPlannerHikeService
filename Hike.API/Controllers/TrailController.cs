@@ -3,7 +3,6 @@ using Hike.API.DTO;
 using Hike.UseCases.Requests.Trail;
 using Hike.UseCases.Responses;
 using Hike.UseCases.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hike.API.Controllers;
