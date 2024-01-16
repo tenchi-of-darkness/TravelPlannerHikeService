@@ -69,17 +69,17 @@ public class TrailService : ITrailService
         return new GetTrailsResponse(_mapper.Map<GetTrailResponse[]>(entities));
     }
 
-    public async Task<AddTrailResponse> AddTrail(AddTrailRequest request)
+    public async Task<TrailResponse> AddTrail(AddTrailRequest request)
     {
         if (request.Description?.Length > 255)
-            return new AddTrailResponse(FailureType.User,
+            return new TrailResponse(FailureType.User,
                 "Description has too many characters. Only 255 characters allowed");
 
         var userId = _authenticationUtility.GetUserId();
 
         if (userId == null)
         {
-            return new AddTrailResponse(FailureType.User, "Authentication failure");
+            return new TrailResponse(FailureType.User, "Authentication failure");
         }
 
         var entity = _mapper.Map<TrailEntity>(request);
@@ -89,29 +89,44 @@ public class TrailService : ITrailService
         var lineString = await _routeService.GetRoute(request.Start, request.End);
 
         if (lineString == null)
-            return new AddTrailResponse(FailureType.Server, "Route Api failure");
+            return new TrailResponse(FailureType.Server, "Route Api failure");
 
         entity.LineString = lineString;
         
         if (!await _trailRepository.AddTrail(entity))
-            return new AddTrailResponse(FailureType.Server, "Database failure");
+            return new TrailResponse(FailureType.Server, "Database failure");
 
-        return new AddTrailResponse();
+        return new TrailResponse();
     }
 
-    public async Task<AddTrailResponse> AddTrailToFavorites(Guid id)
+    public async Task<TrailResponse> AddTrailToFavorites(Guid id)
     {
         var userId = _authenticationUtility.GetUserId();
 
         if (userId == null)
         {
-            return new AddTrailResponse(FailureType.User, "Authentication failure");
+            return new TrailResponse(FailureType.User, "Authentication failure");
         }
 
         if (!await _trailRepository.AddTrailToFavorites(userId, id))
-            return new AddTrailResponse(FailureType.Server, "Database failure");
+            return new TrailResponse(FailureType.Server, "Database failure");
 
-        return new AddTrailResponse();
+        return new TrailResponse();
+    }
+
+    public async Task<TrailResponse> RemoveTrailFromFavorites(Guid id)
+    {
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return new TrailResponse(FailureType.User, "Authentication failure");
+        }
+
+        if (!await _trailRepository.RemoveTrailFromFavorites(userId, id))
+            return new TrailResponse(FailureType.Server, "Database failure");
+
+        return new TrailResponse();
     }
 
     public async Task<bool> DeleteTrail(Guid id)

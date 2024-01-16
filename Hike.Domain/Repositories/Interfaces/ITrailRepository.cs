@@ -15,6 +15,7 @@ public interface ITrailRepository
     Task<bool> AddTrail(TrailEntity entity);
     
     Task<bool> AddTrailToFavorites(string userId, Guid id);
+    Task<bool> RemoveTrailFromFavorites(string userId, Guid id);
 
     Task<bool> DeleteTrail(Guid id);
 }

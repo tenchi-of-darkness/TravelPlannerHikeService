@@ -83,8 +83,23 @@ public class TrailRepository : ITrailRepository
             _context.Users.Add(newUser);
             return await _context.SaveChangesAsync() >= 1;
         }
-        
+
         user.FavoriteTrails.Add(trail);
+        return await _context.SaveChangesAsync() >= 1;
+    }
+
+    public async Task<bool> RemoveTrailFromFavorites(string userId, Guid id)
+    {
+        var user = await _context.Users.Include(x => x.FavoriteTrails).Where(x => x.Id == userId)
+            .SingleOrDefaultAsync();
+
+        var trail = user?.FavoriteTrails.FirstOrDefault(x => x.Id == id);
+        if (trail == null)
+        {
+            return false;
+        }
+
+        user!.FavoriteTrails.Remove(trail);
         return await _context.SaveChangesAsync() >= 1;
     }
 

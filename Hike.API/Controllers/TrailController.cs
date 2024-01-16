@@ -66,7 +66,7 @@ public class TrailController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<AddTrailResponse>> AddTrail([FromBody] AddTrailRequest request)
+    public async Task<ActionResult<TrailResponse>> AddTrail([FromBody] AddTrailRequest request)
     {
         var response = await _service.AddTrail(request);
         return response.FailureType switch
@@ -78,9 +78,21 @@ public class TrailController : ControllerBase
     }
 
     [HttpPost("{id:guid}/favorite")]
-    public async Task<ActionResult<AddTrailResponse>> AddTrailToFavorites([FromRoute] Guid id)
+    public async Task<ActionResult<TrailResponse>> AddTrailToFavorites([FromRoute] Guid id)
     {
         var response = await _service.AddTrailToFavorites(id);
+        return response.FailureType switch
+        {
+            null => Ok(),
+            FailureType.User => BadRequest(response),
+            _ => StatusCode(500, response)
+        };
+    }
+    
+    [HttpDelete("{id:guid}/favorite")]
+    public async Task<ActionResult<TrailResponse>> RemoveTrailFromFavorites([FromRoute] Guid id)
+    {
+        var response = await _service.RemoveTrailFromFavorites(id);
         return response.FailureType switch
         {
             null => Ok(),
