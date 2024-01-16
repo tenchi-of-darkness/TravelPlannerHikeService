@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hike.UseCases.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using NetTopologySuite.IO.Converters;
 
 namespace Hike.UseCases.Services;
 
+[ExcludeFromCodeCoverage]
 public class RouteService : IRouteService
 {
     private readonly IConfiguration _configuration;

@@ -4,6 +4,7 @@ using Hike.API;
 using Hike.API.DTO;
 using Hike.Domain.Enum;
 using Hike.UseCases.Requests.Trail;
+using Hike.UseCases.Responses;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NetTopologySuite.Geometries;
@@ -28,7 +29,7 @@ public class HikeIntegrationTests
 
         // Act
         var response = await client.PostAsJsonAsync("/api/trail",
-            new AddTrailRequest(new Point(55,8), new Point(55,9), 3f,
+            new AddTrailRequest(new Point(55, 8), new Point(55, 9), 3f,
                 TrailDifficulty.Beginner, "", "", "", 1L),
             Default.JsonSerializerOptions);
 
@@ -56,7 +57,7 @@ public class HikeIntegrationTests
 
         // Act
         var response = await client.PostAsJsonAsync("/api/trail",
-            new AddTrailRequest(new Point(55,8), new Point(55,9), 3f,
+            new AddTrailRequest(new Point(55, 8), new Point(55, 9), 3f,
                 TrailDifficulty.Beginner, "", "", "", 1L),
             Default.JsonSerializerOptions);
         var getTrailsResponse = await client.GetAsync("/api/trail?Page=1&PageSize=15");
@@ -72,6 +73,30 @@ public class HikeIntegrationTests
         deleteResponse.EnsureSuccessStatusCode();
         Assert.True(getTrailResponse.StatusCode == HttpStatusCode.NotFound);
     }
-    
-    
+
+    [Fact]
+    public async Task AddToFavorites_RemoveFromFavorites_GetFavorites_Success()
+    {
+        // Arrange
+        var client = _factory.CreateClient();
+        // Act
+        var addTrailResponse = await client.PostAsJsonAsync("/api/trail",
+            new AddTrailRequest(new Point(55, 8), new Point(55, 9), 3f, TrailDifficulty.Beginner, "", "", "", 1L),
+            Default.JsonSerializerOptions);
+        var getTrailsResponse = await client.GetAsync("/api/trail/user?Page=1&PageSize=15");
+        var trail =
+            await getTrailsResponse.Content.ReadFromJsonAsync<IEnumerable<TrailDTO>>(Default.JsonSerializerOptions);
+        Guid trailId = trail!.First().Id;
+        var addToFavoritesResponse = await client.PostAsync($"/api/trail/{trailId}/favorite", null);
+        var getFavoritesResponse = await client.GetAsync("/api/trail/favorite");
+        var favorites =
+            await getFavoritesResponse.Content.ReadFromJsonAsync<IEnumerable<TrailDTO>>(Default.JsonSerializerOptions);
+        var removeFromFavoritesResponse = await client.DeleteAsync($"/api/trail/{trailId}/favorite");
+        // Assert
+        addTrailResponse.EnsureSuccessStatusCode();
+        addToFavoritesResponse.EnsureSuccessStatusCode();
+        removeFromFavoritesResponse.EnsureSuccessStatusCode();
+        getFavoritesResponse.EnsureSuccessStatusCode();
+        Assert.Contains(trailId, favorites?.Select(x => x.Id) ?? Array.Empty<Guid>());
+    }
 }
