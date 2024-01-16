@@ -78,6 +78,13 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+      - run: sudo service mysql stop
+      - name: Setup Database
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: 'hike-test-service'
+          mysql root password: '12345'
+          mysql version: '8.0'
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
