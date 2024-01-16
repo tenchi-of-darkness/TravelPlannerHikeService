@@ -173,4 +173,19 @@ public class TrailServiceTests
         _mockTrailRepo.Verify(repo => repo.DeleteTrail(id), Times.Once);
         Assert.True(result);
     }
+
+    // [Fact]
+    // public async Task AddToFavorietes()
+    // {
+    //     // Arrange
+    //     _mockTrailRepo.Setup(repo => repo.AddTrailToFavorites(It.IsAny<string>(), It.IsAny<Guid>())).Returns(Task.FromResult(true));
+    //     var trailService = CreateService();
+    //     var userId = "test";
+    //     var trailId = Guid.NewGuid();
+    //     // Act
+    //     var result = await trailService.AddTrailToFavorites(trailId);
+    //     // Assert
+    //     _mockTrailRepo.Verify(repo => repo.AddTrailToFavorites(userId, trailId), Times.Once);
+    //     Assert.True(result);
+    // }
 }
