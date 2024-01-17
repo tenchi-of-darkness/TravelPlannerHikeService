@@ -45,6 +45,8 @@ public class TrailServiceTests
     public async Task CanGetTrailById()
     {
         // Arrange
+        _mockTrailRepo.Setup(repo =>
+            repo.SearchFavoriteTrailsByUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Array.Empty<TrailEntity>());
         var trail = new TrailEntity()
         {
             Description = "Test",
@@ -73,6 +75,8 @@ public class TrailServiceTests
     public async Task CanGetTrails()
     {
         // Arrange
+        _mockTrailRepo.Setup(repo =>
+            repo.SearchFavoriteTrailsByUser(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Array.Empty<TrailEntity>());
         _mockTrailRepo.Setup(repo => repo.SearchTrailByTitle(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
             .ReturnsAsync(new List<TrailEntity>
             {
