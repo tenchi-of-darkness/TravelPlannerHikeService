@@ -12,4 +12,5 @@ public record GetTrailResponse(
     string LocationName,
     long DistanceInMeters,
     Guid Id,
-    string OwnerUserId);
+    string OwnerUserId,
+    bool IsFavorite = false);

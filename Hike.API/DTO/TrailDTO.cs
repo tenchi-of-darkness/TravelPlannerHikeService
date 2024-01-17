@@ -12,4 +12,5 @@ public record TrailDTO(
     string LocationName,
     long DistanceInMeters,
     Guid Id,
-    string OwnerUserId);
+    string OwnerUserId,
+    bool IsFavorite);
