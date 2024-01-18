@@ -75,6 +75,18 @@ public class TrailController : ControllerBase
             _ => StatusCode(500, response)
         };
     }
+    
+    [HttpPut]
+    public async Task<ActionResult<TrailResponse>> UpdateTrail([FromBody] UpdateTrailRequest request)
+    {
+        var response = await _service.UpdateTrail(request);
+        return response.FailureType switch
+        {
+            null => Ok(),
+            FailureType.User => BadRequest(response),
+            _ => StatusCode(500, response)
+        };
+    }
 
     [HttpPost("{id:guid}/favorite")]
     public async Task<ActionResult<TrailResponse>> AddTrailToFavorites([FromRoute] Guid id)

@@ -60,6 +60,8 @@ public class RouteService : IRouteService
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(responseBody, options);
         var lineString = featureCollection?.Where(x => x.Geometry is LineString).Select(x => (LineString)x.Geometry)
             .FirstOrDefault();
-        return lineString;
+        
+        //Swap X and Y because of silly api
+        return new LineString(lineString?.Coordinates.Select(x => new Coordinate(x.Y, x.X)).ToArray());
     }
 }

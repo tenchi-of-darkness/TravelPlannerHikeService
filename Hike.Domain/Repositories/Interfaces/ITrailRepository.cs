@@ -13,6 +13,7 @@ public interface ITrailRepository
     Task<IEnumerable<TrailEntity>> SearchFavoriteTrailsByUser(string userId, int page, int pageSize);
 
     Task<bool> AddTrail(TrailEntity entity);
+    Task<bool> UpdateTrail(TrailEntity entity);
     
     Task<bool> AddTrailToFavorites(string userId, Guid id);
     Task<bool> RemoveTrailFromFavorites(string userId, Guid id);

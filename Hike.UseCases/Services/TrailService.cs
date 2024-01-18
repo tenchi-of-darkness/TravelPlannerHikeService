@@ -127,6 +127,43 @@ public class TrailService : ITrailService
         return new TrailResponse();
     }
 
+    public async Task<TrailResponse> UpdateTrail(UpdateTrailRequest request)
+    {
+        if (request.Description?.Length > 255)
+            return new TrailResponse(FailureType.User,
+                "Description has too many characters. Only 255 characters allowed");
+        
+        var userId = _authenticationUtility.GetUserId();
+
+        if (userId == null)
+        {
+            return new TrailResponse(FailureType.User, "Authentication failure");
+        }
+        
+        var trail = await GetTrailById(request.Id);
+
+        if (trail == null || trail.OwnerUserId != userId)
+        {
+            return new TrailResponse(FailureType.User, "Not found or no access");
+        }
+
+        var entity = _mapper.Map<TrailEntity>(request);
+
+        entity.OwnerUserId = userId;
+        
+        var lineString = await _routeService.GetRoute(request.Start, request.End);
+
+        if (lineString == null)
+            return new TrailResponse(FailureType.Server, "Route Api failure");
+
+        entity.LineString = lineString;
+        
+        if (!await _trailRepository.UpdateTrail(entity))
+            return new TrailResponse(FailureType.Server, "Database failure");
+
+        return new TrailResponse();
+    }
+
     public async Task<TrailResponse> AddTrailToFavorites(Guid id)
     {
         var userId = _authenticationUtility.GetUserId();

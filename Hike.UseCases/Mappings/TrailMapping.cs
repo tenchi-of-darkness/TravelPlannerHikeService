@@ -10,6 +10,7 @@ public class TrailMapping : Profile
     public TrailMapping()
     {
         CreateMap<AddTrailRequest, TrailEntity>();
+        CreateMap<UpdateTrailRequest, TrailEntity>();
         CreateMap<TrailEntity, TrailResponse>();
         CreateMap<TrailEntity, GetTrailResponse>();
     }

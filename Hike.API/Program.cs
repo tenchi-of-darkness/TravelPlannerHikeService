@@ -90,8 +90,6 @@ app.UseEndpoints(x =>
     x.MapHub<MapHub>("/api/map-hub");
 });
 
-
-
 using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     ApplicationDbContext? context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();

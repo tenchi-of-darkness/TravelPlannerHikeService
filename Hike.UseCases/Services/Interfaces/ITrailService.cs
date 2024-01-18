@@ -10,6 +10,7 @@ public interface ITrailService
     Task<GetTrailsResponse?> GetUserTrails(int page, int pageSize);
     Task<GetTrailsResponse?> GetUserFavoriteTrails(int page, int pageSize);
     Task<TrailResponse> AddTrail(AddTrailRequest request);
+    Task<TrailResponse> UpdateTrail(UpdateTrailRequest request);
     Task<TrailResponse> AddTrailToFavorites(Guid id);
     Task<TrailResponse> RemoveTrailFromFavorites(Guid id);
     Task<bool> DeleteTrail(Guid id);

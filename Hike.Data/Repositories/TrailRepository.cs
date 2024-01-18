@@ -59,6 +59,18 @@ public class TrailRepository : ITrailRepository
         return await _context.SaveChangesAsync() == 1;
     }
 
+    public async Task<bool> UpdateTrail(TrailEntity entity)
+    {
+        var oldEntity = _context.Trails.Local.FirstOrDefault(x => entity.Id==x.Id);
+        if (oldEntity != null)
+        {
+            _context.Entry(oldEntity).State = EntityState.Detached;
+        }
+        
+        _context.Trails.Update(_mapper.Map<TrailDBO>(entity));
+        return await _context.SaveChangesAsync() >= 1;
+    }
+
     public async Task<bool> AddTrailToFavorites(string userId, Guid id)
     {
         var user = await _context.Users.Include(x => x.FavoriteTrails).Where(x => x.Id == userId)
